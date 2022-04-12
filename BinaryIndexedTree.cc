@@ -2,6 +2,7 @@
 #include <vector>
 using namespace std;
 
+// leetcode第307题
 class NumArray {
 public:
     vector<int> A;  // 原数组
