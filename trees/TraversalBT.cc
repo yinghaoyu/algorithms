@@ -152,3 +152,28 @@ void pos2(Node* head)
     }
   }
 }
+
+// bfs
+void level(Node* head)
+{
+  if (head == NULL)
+  {
+    return;
+  }
+  queue<Node*> queue;
+  queue.push(head);
+  while (!queue.empty())
+  {
+    Node* cur = queue.front();
+    queue.pop();
+    printf("%d\n", cur->value);
+    if (cur->left != NULL)
+    {
+      queue.push(cur->left);
+    }
+    if (cur->right != NULL)
+    {
+      queue.push(cur->right);
+    }
+  }
+}
