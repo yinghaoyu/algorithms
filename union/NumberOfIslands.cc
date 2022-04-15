@@ -11,7 +11,7 @@ using namespace std;
 #define N 100
 char board[M][N];
 
-/************** WAY 3 ****************/
+/************** WAY 3 暴力递归****************/
 // 从(i,j)这个位置出发，把所有练成一片的'1'字符，变成0
 void infect(char** board, int i, int j)
 {
@@ -43,7 +43,7 @@ int numIslands3(char** board)
   return islands;
 }
 
-/*************  WAY 1 ******************/
+/*************  WAY 1 haspmap******************/
 typedef struct Dot
 {
 
@@ -174,7 +174,7 @@ int numIslands1(char** board)
   return uf.sets();
 }
 
-/************ WAY 2 **************/
+/************ WAY 2 数组**************/
 class UnionFind2
 {
 private:
