@@ -64,7 +64,7 @@ void dfs(Node* node)
     stack.pop_back();
     for (Node* next : cur->nexts)
     {
-      if (set.find(next) != set.end())
+      if (set.find(next) == set.end())
       {
         stack.push_back(cur);
         stack.push_back(next);

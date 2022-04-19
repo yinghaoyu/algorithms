@@ -6,7 +6,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
-// 克鲁斯卡尔最小生成树
+// 克鲁斯卡尔最小生成树，算法思想：选权值最小的边加入并查集
 
 using namespace std;
 

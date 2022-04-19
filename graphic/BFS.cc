@@ -65,7 +65,7 @@ void bfs(Node* start)
     printf("%d\n", cur->value);  // 处理
     for (Node* next : cur->nexts)  // 把所有子节点入队
     {
-      if (set.find(next) != set.end())
+      if (set.find(next) == set.end())
       {
         set.emplace(next);
         queue.push_back(next);
