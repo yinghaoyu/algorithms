@@ -133,8 +133,8 @@ class SegmentTree
       // 任务如果把此时的范围全包了！
       if (L <= l && r <= R)
       {
-        sum[rt] += C * (r - l + 1);
-        lazy[rt] += C;
+        sum[rt] += C * (r - l + 1);  // 直接更新根节点的sum，区间数*值
+        lazy[rt] += C;  // 懒更新
         return;
       }
       // 任务没有把你全包！
