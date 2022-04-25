@@ -2,7 +2,7 @@
 
 ## Brief
 
-Collection of algorithms. Ultimate pursuit of code.
+Collection of algorithms. The ultimate pursuit of code.
 
 ## Reference
 
