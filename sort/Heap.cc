@@ -28,6 +28,7 @@ void swap(int arr[], int i, int j)
 
 // 新加进来的数，现在停在了index位置，请依次往上移动，
 // 移动到0位置，或者干不掉自己的父亲了，停！
+// 时间复杂度：log(N)
 void heapInsert(int arr[], int index)
 {
   // [index]    [index-1]/2
@@ -41,6 +42,7 @@ void heapInsert(int arr[], int index)
 
 // 从index位置，往下看，不断的下沉
 // 停：较大的孩子都不再比index位置的数大；已经没孩子了
+// 时间复杂度：log(N)
 void heapify(int arr[], int index, int heapSize)
 {
   int left = index * 2 + 1;  // 左孩子的下标
