@@ -137,7 +137,7 @@ class TraversalBT
         while (!s1.empty())
         {
           head = s1.back();
-          s1.pop_back(); // 跟 右 左
+          s1.pop_back(); // 根 右 左
           s2.push_back(head);
           if (head->left != NULL)
           {
@@ -148,7 +148,7 @@ class TraversalBT
             s1.push_back(head->right);
           }
         }
-        // 左 右 跟
+        // 左 右 根
         while (!s2.empty()) {
           Node* cur = s2.back();
           s2.pop_back();
