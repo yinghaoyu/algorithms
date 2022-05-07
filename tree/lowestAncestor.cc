@@ -48,7 +48,7 @@ Node* lowestAncestor1(Node* head, Node* o1, Node* o2)
     o1Set.emplace(cur);  // o1父节点的集合
   }
   cur = o2;
-  while (o1Set.find(cur) != o1Set.end())
+  while (o1Set.find(cur) == o1Set.end())
   {
     cur = parentMap.at(cur);  // 从o1的父节点集合查找o2的父节点
   }
