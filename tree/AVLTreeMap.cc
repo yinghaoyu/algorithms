@@ -26,13 +26,13 @@ class AVLTreeMap
 {
   private:
     AVLNode<K, V>* root;
-    int size;
+    int count;
 
   public:
     AVLTreeMap()
     {
-      root = NULL;
-      size = 0;
+      root = nullptr;
+      count = 0;
     }
 
     AVLNode<K, V>* rightRotate(AVLNode<K, V>* cur)
@@ -40,8 +40,8 @@ class AVLTreeMap
       AVLNode<K, V>* left = cur->l;
       cur->l = left->r;
       left->r = cur;
-      cur->h = std::max((cur->l != NULL ? cur->l->h : 0), (cur->r != NULL ? cur->r->h : 0)) + 1;
-      left->h = std::max((left->l != NULL ? left->l->h : 0), (left->r != NULL ? left->r->h : 0)) + 1;
+      cur->h = std::max((cur->l != nullptr ? cur->l->h : 0), (cur->r != nullptr ? cur->r->h : 0)) + 1;
+      left->h = std::max((left->l != nullptr ? left->l->h : 0), (left->r != nullptr ? left->r->h : 0)) + 1;
       return left;
     }
 
@@ -50,25 +50,25 @@ class AVLTreeMap
       AVLNode<K, V>* right = cur->r;
       cur->r = right->l;
       right->l = cur;
-      cur->h = std::max((cur->l != NULL ? cur->l->h : 0), (cur->r != NULL ? cur->r->h : 0)) + 1;
-      right->h = std::max((right->l != NULL ? right->l->h : 0), (right->r != NULL ? right->r->h : 0)) + 1;
+      cur->h = std::max((cur->l != nullptr ? cur->l->h : 0), (cur->r != nullptr ? cur->r->h : 0)) + 1;
+      right->h = std::max((right->l != nullptr ? right->l->h : 0), (right->r != nullptr ? right->r->h : 0)) + 1;
       return right;
     }
 
     AVLNode<K, V>* maintain(AVLNode<K, V>* cur)
     {
-      if (cur == NULL) 
+      if (cur == nullptr) 
       {
-        return NULL;
+        return nullptr;
       }
-      int leftHeight = cur->l != NULL ? cur->l->h : 0;
-      int rightHeight = cur->r != NULL ? cur->r->h : 0;
+      int leftHeight = cur->l != nullptr ? cur->l->h : 0;
+      int rightHeight = cur->r != nullptr ? cur->r->h : 0;
       if (std::abs(leftHeight - rightHeight) > 1)
       {
         if (leftHeight > rightHeight)
         {
-          int leftLeftHeight = cur->l != NULL && cur->l->l != NULL ? cur->l->l->h : 0;
-          int leftRightHeight = cur->l != NULL && cur->l->r != NULL ? cur->l->r->h : 0;
+          int leftLeftHeight = cur->l != nullptr && cur->l->l != nullptr ? cur->l->l->h : 0;
+          int leftRightHeight = cur->l != nullptr && cur->l->r != nullptr ? cur->l->r->h : 0;
           if (leftLeftHeight >= leftRightHeight)
           {
             cur = rightRotate(cur);
@@ -81,8 +81,8 @@ class AVLTreeMap
         }
         else
         {
-          int rightLeftHeight = cur->r != NULL && cur->r->l != NULL ? cur->r->l->h : 0;
-          int rightRightHeight = cur->r != NULL && cur->r->r != NULL ? cur->r->r->h : 0;
+          int rightLeftHeight = cur->r != nullptr && cur->r->l != nullptr ? cur->r->l->h : 0;
+          int rightRightHeight = cur->r != nullptr && cur->r->r != nullptr ? cur->r->r->h : 0;
           if (rightRightHeight >= rightLeftHeight)
           {
             cur = leftRotate(cur);
@@ -101,7 +101,7 @@ class AVLTreeMap
     {
       AVLNode<K, V>* pre = root;
       AVLNode<K, V>* cur = root;
-      while (cur != NULL)
+      while (cur != nullptr)
       {
         pre = cur;
         if (key.compareTo(cur->k) == 0)
@@ -122,9 +122,9 @@ class AVLTreeMap
 
     AVLNode<K, V>* findLastNoSmallIndex(K key)
     {
-      AVLNode<K, V>* ans = NULL;
+      AVLNode<K, V>* ans = nullptr;
       AVLNode<K, V>* cur = root;
-      while (cur != NULL)
+      while (cur != nullptr)
       {
         if (key.compareTo(cur->k) == 0)
         {
@@ -146,9 +146,9 @@ class AVLTreeMap
 
     AVLNode<K, V>* findLastNoBigIndex(K key)
     {
-      AVLNode<K, V>* ans = NULL;
+      AVLNode<K, V>* ans = nullptr;
       AVLNode<K, V>* cur = root;
-      while (cur != NULL)
+      while (cur != nullptr)
       {
         if (key.compareTo(cur->k) == 0)
         {
@@ -170,7 +170,7 @@ class AVLTreeMap
 
     AVLNode<K, V>* add(AVLNode<K, V>* cur, K key, V value)
     {
-      if (cur == NULL)
+      if (cur == nullptr)
       {
         return new AVLNode<K, V>(key, value);
       }
@@ -184,7 +184,7 @@ class AVLTreeMap
         {
           cur->r = add(cur->r, key, value);
         }
-        cur->h = std::max(cur->l != NULL ? cur->l->h : 0, cur->r != NULL ? cur->r->h : 0) + 1;
+        cur->h = std::max(cur->l != nullptr ? cur->l->h : 0, cur->r != nullptr ? cur->r->h : 0) + 1;
         return maintain(cur);
       }
     }
@@ -202,21 +202,21 @@ class AVLTreeMap
       }
       else
       {
-        if (cur->l == NULL && cur->r == NULL)
+        if (cur->l == nullptr && cur->r == nullptr)
         {
-          cur = NULL;
+          cur = nullptr;
         }
-        else if (cur->l == NULL && cur->r != NULL)
+        else if (cur->l == nullptr && cur->r != nullptr)
         {
           cur = cur->r;
-        } else if (cur->l != NULL && cur->r == NULL)
+        } else if (cur->l != nullptr && cur->r == nullptr)
         {
           cur = cur->l;
         }
         else
         {
           AVLNode<K, V>* des = cur->r;
-          while (des->l != NULL)
+          while (des->l != nullptr)
           {
             des = des->l;
           }
@@ -226,79 +226,79 @@ class AVLTreeMap
           cur = des;
         }
       }
-      if (cur != NULL)
+      if (cur != nullptr)
       {
-        cur.h = std::max(cur->l != NULL ? cur->l->h : 0, cur->r != NULL ? cur->r->h : 0) + 1;
+        cur->h = std::max(cur->l != nullptr ? cur->l->h : 0, cur->r != nullptr ? cur->r->h : 0) + 1;
       }
       return maintain(cur);
     }
 
-    public int size()
+    int size()
     {
-      return size;
+      return count;
     }
 
     bool containsKey(K key)
     {
-      if (key == NULL)
+      if (key == nullptr)
       {
         return false;
       }
       AVLNode<K, V>* lastNode = findLastIndex(key);
-      return lastNode != NULL && key.compareTo(lastNode->k) == 0 ? true : false;
+      return lastNode != nullptr && key.compareTo(lastNode->k) == 0 ? true : false;
     }
 
     void put(K key, V value)
     {
-      if (key == NULL)
+      if (key == nullptr)
       {
         return;
       }
       AVLNode<K, V>* lastNode = findLastIndex(key);
-      if (lastNode != NULL && key.compareTo(lastNode->k) == 0)
+      if (lastNode != nullptr && key.compareTo(lastNode->k) == 0)
       {
         lastNode->v = value;
       }
       else
       {
-        size++;
+        count++;
         root = add(root, key, value);
       }
     }
     void remove(K key)
     {
-      if (key == NULL)
+      if (key == nullptr)
       {
         return;
       }
       if (containsKey(key))
       {
-        size--;
+        count--;
         root = del(root, key);
       }
     }
 
     V get(K key)
     {
-      if (key == NULL)
+      if (key == nullptr)
       {
-        return NULL;
+        return nullptr;
       }
       AVLNode<K, V>* lastNode = findLastIndex(key);
-      if (lastNode != NULL && key.compareTo(lastNode->k) == 0)
+      if (lastNode != nullptr && key.compareTo(lastNode->k) == 0)
       {
         return lastNode->v;
       }
-      return NULL;
+      return nullptr;
     }
     K firstKey()
     {
-      if (root == NULL)
+      if (root == nullptr)
       {
-        return NULL;
+        return nullptr;
       }
       AVLNode<K, V>* cur = root;
-      while (cur->l != NULL)
+      while (cur->l != nullptr)
       {
         cur = cur->l;
       }
@@ -307,11 +307,11 @@ class AVLTreeMap
 
     K lastKey()
     {
-      if (root == NULL) {
-        return NULL;
+      if (root == nullptr) {
+        return nullptr;
       }
       AVLNode<K, V>* cur = root;
-      while (cur->r != NULL)
+      while (cur->r != nullptr)
       {
         cur = cur->r;
       }
@@ -319,17 +319,20 @@ class AVLTreeMap
     }
     K floorKey(K key)
     {
-      if (key == NULL) {
-        return NULL;
+      if (key == nullptr) {
+        return nullptr;
       }
       AVLNode<K, V>* lastNoBigNode = findLastNoBigIndex(key);
-      return lastNoBigNode == NULL ? NULL : lastNoBigNode->k;
+      return lastNoBigNode == nullptr ? nullptr : lastNoBigNode->k;
     }
 
-    K ceilingKey(K key) {
-      if (key == NULL) {
-        return NULL;
+    K ceilingKey(K key)
+    {
+      if (key == nullptr)
+      {
+        return nullptr;
       }
       AVLNode<K, V> lastNoSmallNode = findLastNoSmallIndex(key);
-      return lastNoSmallNode == NULL ? NULL : lastNoSmallNode.k;
+      return lastNoSmallNode == nullptr ? nullptr : lastNoSmallNode.k;
     }
+};

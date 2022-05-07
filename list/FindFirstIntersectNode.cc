@@ -5,7 +5,7 @@
 using namespace std;
 
 // 给定两个可能有环也可能无环的单链表，头节点head1和head2。
-// 请实现一个函数，如果两个链表相交，请返回相交的第一个节点。如果不相交，返回NULL
+// 请实现一个函数，如果两个链表相交，请返回相交的第一个节点。如果不相交，返回nullptr
 // 要求：如果两个链表长度之和为N，时间复杂度请达到O(N)，额外空间复杂度请达到O(1)。
 // 思路：
 // 先找单链表的入环节点。从头结点开始，快指针走一步，慢指针走两步。如果有环必然相遇。
@@ -56,38 +56,38 @@ class FindFirstIntersectNode
 
     static Node* getIntersectNode(Node* head1, Node* head2)
     {
-      if (head1 == NULL || head2 == NULL)
+      if (head1 == nullptr || head2 == nullptr)
       {
-        return NULL;
+        return nullptr;
       }
       Node* loop1 = getLoopNode(head1);
       Node* loop2 = getLoopNode(head2);
-      if (loop1 == NULL && loop2 == NULL)
+      if (loop1 == nullptr && loop2 == nullptr)
       {
         return noLoop(head1, head2);
       }
-      if (loop1 != NULL && loop2 != NULL)
+      if (loop1 != nullptr && loop2 != nullptr)
       {
         return bothLoop(head1, loop1, head2, loop2);
       }
-      return NULL;
+      return nullptr;
     }
 
-    // 找到链表第一个入环节点，如果无环，返回NULL
+    // 找到链表第一个入环节点，如果无环，返回nullptr
     static Node* getLoopNode(Node* head)
     {
-      if (head == NULL || head->next == NULL || head->next->next == NULL)
+      if (head == nullptr || head->next == nullptr || head->next->next == nullptr)
       {
-        return NULL;
+        return nullptr;
       }
       // n1 慢  n2 快
       Node* slow = head->next; // n1 -> slow
       Node* fast = head->next->next; // n2 -> fast
       while (slow != fast)
       {
-        if (fast->next == NULL || fast->next->next == NULL)
+        if (fast->next == nullptr || fast->next->next == nullptr)
         {
-          return NULL;
+          return nullptr;
         }
         fast = fast->next->next;
         slow = slow->next;
@@ -108,29 +108,29 @@ class FindFirstIntersectNode
       return slow;
     }
 
-    // 如果两个链表都无环，返回第一个相交节点，如果不想交，返回NULL
+    // 如果两个链表都无环，返回第一个相交节点，如果不想交，返回nullptr
     static Node* noLoop(Node* head1, Node* head2)
     {
-      if (head1 == NULL || head2 == NULL)
+      if (head1 == nullptr || head2 == nullptr)
       {
-        return NULL;
+        return nullptr;
       }
       Node* cur1 = head1;
       Node* cur2 = head2;
       int n = 0;
-      while (cur1->next != NULL)
+      while (cur1->next != nullptr)
       {
         n++;
         cur1 = cur1->next;
       }
-      while (cur2->next != NULL)
+      while (cur2->next != nullptr)
       {
         n--;
         cur2 = cur2->next;
       }
       if (cur1 != cur2)  // Y 结构尾结点肯定相等
       {
-        return NULL;
+        return nullptr;
       }
       // n  :  链表1长度减去链表2长度的值
       cur1 = n > 0 ? head1 : head2; // 谁长，谁的头变成cur1
@@ -149,11 +149,11 @@ class FindFirstIntersectNode
       return cur1;
     }
 
-    // 两个有环链表，返回第一个相交节点，如果不想交返回NULL
+    // 两个有环链表，返回第一个相交节点，如果不想交返回nullptr
     static Node* bothLoop(Node* head1, Node* loop1, Node* head2, Node* loop2)
     {
-      Node* cur1 = NULL;
-      Node* cur2 = NULL;
+      Node* cur1 = nullptr;
+      Node* cur2 = nullptr;
       if (loop1 == loop2)  // Y + b 结构，直接忽略环，跟 Y 结构处理一样
       {
         cur1 = head1;
@@ -195,13 +195,13 @@ class FindFirstIntersectNode
           }
           cur1 = cur1->next;
         }
-        return NULL;  // 没遇到说明是 2b 结构
+        return nullptr;  // 没遇到说明是 2b 结构
       }
     }
 
     static void test()
     {
-      // 1->2->3->4->5->6->7->NULL
+      // 1->2->3->4->5->6->7->nullptr
       Node* head1 = new Node(1);
       head1->next = new Node(2);
       head1->next->next = new Node(3);
@@ -210,7 +210,7 @@ class FindFirstIntersectNode
       head1->next->next->next->next->next = new Node(6);
       head1->next->next->next->next->next->next = new Node(7);
 
-      // 0->9->8->6->7->NULL
+      // 0->9->8->6->7->nullptr
       Node* head2 = new Node(0);
       head2->next = new Node(9);
       head2->next->next = new Node(8);

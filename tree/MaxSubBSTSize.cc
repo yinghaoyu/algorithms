@@ -30,7 +30,7 @@ class MaxSubBSTSize
 
     static void in(Node* head, vector<Node*>& arr)
     {
-      if (head == NULL)
+      if (head == nullptr)
       {
         return;
       }
@@ -41,7 +41,7 @@ class MaxSubBSTSize
 
     static int getBSTSize(Node* head)
     {
-      if (head == NULL)
+      if (head == nullptr)
       {
         return 0;
       }
@@ -59,7 +59,7 @@ class MaxSubBSTSize
 
     static int maxSubBSTSize1(Node* head)
     {
-      if (head == NULL)
+      if (head == nullptr)
       {
         return 0;
       }
@@ -90,7 +90,7 @@ class MaxSubBSTSize
 
     static Info process(Node* x)
     {
-      if (x == NULL)
+      if (x == nullptr)
       {
         return Info(0, 0, INT32_MIN, INT32_MAX);
       }
@@ -128,7 +128,7 @@ class MaxSubBSTSize
 
     static int maxSubBSTSize2(Node* head)
     {
-      if(head == NULL)
+      if(head == nullptr)
       {
         return 0;
       }
@@ -155,7 +155,7 @@ class MaxSubBSTSize
     {
       if (level > maxLevel || getRandom(0, MAX_SEED) < HALF_SEED)
       {
-        return NULL;
+        return nullptr;
       }
       Node* head = new Node(getRandom(0, maxValue));
       head->left = generate(level + 1, maxLevel, maxValue);

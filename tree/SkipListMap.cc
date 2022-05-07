@@ -33,13 +33,13 @@ class SkipListNode
       val = v;
     }
 
-    // 遍历的时候，如果是往右遍历到的NULL(next == NULL), 遍历结束
-    // 头(NULL), 头节点的NULL，认为最小
-    // node  -> 头，node(NULL, "")  node.isKeyLess(!NULL)  true
+    // 遍历的时候，如果是往右遍历到的nullptr(next == nullptr), 遍历结束
+    // 头(nullptr), 头节点的nullptr，认为最小
+    // node  -> 头，node(nullptr, "")  node.isKeyLess(!nullptr)  true
     // node里面的key是否比otherKey小，true，不是false
     bool isKeyLess(K otherKey)
     {
-      //  otherKey == NULL -> false▫
+      //  otherKey == nullptr -> false▫
       return otherKey != "" && (key == "" || key.compare(otherKey) < 0);
     }
 
@@ -61,8 +61,8 @@ class SkipListMap
 
     SkipListMap()
     {
-      head = new SkipListNode<K, V>("NULL", "NULL");
-      head->nextNodes.push_back(NULL); // 0
+      head = new SkipListNode<K, V>("nullptr", "nullptr");
+      head->nextNodes.push_back(nullptr); // 0
       size = 0;
       maxLevel = 0;
     }
@@ -73,7 +73,7 @@ class SkipListMap
     {
       if (key == "")
       {
-        return NULL;
+        return nullptr;
       }
       int level = maxLevel;
       SkipListNode<K, V>* cur = head;
@@ -93,7 +93,7 @@ class SkipListMap
         int level)
     {
       SkipListNode<K, V>* next = cur->nextNodes.at(level);
-      while (next != NULL && next->isKeyLess(key))
+      while (next != nullptr && next->isKeyLess(key))
       {
         cur = next;
         next = cur->nextNodes.at(level);
@@ -109,7 +109,7 @@ class SkipListMap
       }
       SkipListNode<K, V>* less = mostRightLessNodeInTree(key);
       SkipListNode<K, V>* next = less->nextNodes.at(0);
-      return next != NULL && next->isKeyEqual(key);
+      return next != nullptr && next->isKeyEqual(key);
     }
 
     // 新增、改value
@@ -122,13 +122,13 @@ class SkipListMap
       // 0层上，最右一个，< key 的Node -> >key
       SkipListNode<K, V>* less = mostRightLessNodeInTree(key);
       SkipListNode<K, V>* find = less->nextNodes.at(0);
-      if (find != NULL && find->isKeyEqual(key))
+      if (find != nullptr && find->isKeyEqual(key))
       {
         find->val = value;
       }
       else
       {
-        // find == NULL   8   7   9
+        // find == nullptr   8   7   9
         size++;
         int newNodeLevel = 0;
         while ((getRandom(0, MAX_RANDOM) / MAX_RANDOM) < PROBABILITY)
@@ -138,13 +138,13 @@ class SkipListMap
         // newNodeLevel
         while (newNodeLevel > maxLevel)
         {
-          head->nextNodes.push_back(NULL);
+          head->nextNodes.push_back(nullptr);
           maxLevel++;
         }
         SkipListNode<K, V>* newNode = new SkipListNode<K, V>(key, value);
         for (int i = 0; i <= newNodeLevel; i++)
         {
-          newNode->nextNodes.push_back(NULL);
+          newNode->nextNodes.push_back(nullptr);
         }
         int level = maxLevel;
         SkipListNode<K, V>* pre = head;
@@ -166,11 +166,11 @@ class SkipListMap
     {
       if (key == "")
       {
-        return "NULL";
+        return "nullptr";
       }
       SkipListNode<K, V>* less = mostRightLessNodeInTree(key);
       SkipListNode<K, V>* next = less->nextNodes.at(0);
-      return next != NULL && next->isKeyEqual(key) ? next->val : "NULL";
+      return next != nullptr && next->isKeyEqual(key) ? next->val : "nullptr";
     }
 
     void remove(K key)
@@ -186,14 +186,14 @@ class SkipListMap
           SkipListNode<K, V>* next = pre->nextNodes.at(level);
           // 1）在这一层中，pre下一个就是key
           // 2）在这一层中，pre的下一个key是>要删除key
-          if (next != NULL && next->isKeyEqual(key))
+          if (next != nullptr && next->isKeyEqual(key))
           {
             // free delete node memory -> C++
             // level : pre -> next(key) -> ...
             pre->nextNodes[level] =  next->nextNodes.at(level);
           }
           // 在level层只有一个节点了，就是默认节点head
-          if (level != 0 && pre == head && pre->nextNodes.at(level) == NULL)
+          if (level != 0 && pre == head && pre->nextNodes.at(level) == nullptr)
           {
             head->nextNodes.erase(head->nextNodes.begin() + level - 1); // 删除 level
             maxLevel--;
@@ -204,7 +204,7 @@ class SkipListMap
     }
     K firstKey()
     {
-      return head->nextNodes.at(0) != NULL ? head->nextNodes.at(0)->key : "NULL";
+      return head->nextNodes.at(0) != nullptr ? head->nextNodes.at(0)->key : "nullptr";
     }
 
     K lastKey()
@@ -214,7 +214,7 @@ class SkipListMap
       while (level >= 0)
       {
         SkipListNode<K, V>* next = cur->nextNodes.at(level);
-        while (next != NULL)
+        while (next != nullptr)
         {
           cur = next;
           next = cur->nextNodes.at(level);
@@ -228,22 +228,22 @@ class SkipListMap
     {
       if (key == "")
       {
-        return "NULL";
+        return "nullptr";
       }
       SkipListNode<K, V>* less = mostRightLessNodeInTree(key);
       SkipListNode<K, V>* next = less->nextNodes.at(0);
-      return next != NULL ? next->key : "NULL";
+      return next != nullptr ? next->key : "nullptr";
     }
 
     K floorKey(K key)
     {
       if (key == "")
       {
-        return "NULL";
+        return "nullptr";
       }
       SkipListNode<K, V>* less = mostRightLessNodeInTree(key);
       SkipListNode<K, V>* next = less->nextNodes.at(0);
-      return next != NULL && next->isKeyEqual(key) ? next->key : less->key;
+      return next != nullptr && next->isKeyEqual(key) ? next->key : less->key;
     }
 
     int sizes()
@@ -260,7 +260,7 @@ void printAll(SkipListMap<string, string>* obj)
   {
     cout << "Level " << i << " : ";
     SkipListNode<string, string>* cur = obj->head;
-    while (cur->nextNodes.at(i) != NULL)
+    while (cur->nextNodes.at(i) != nullptr)
     {
       SkipListNode<string, string>* next = cur->nextNodes.at(i);
       cout << "(" << next->key + " , " + next->val + ") ";

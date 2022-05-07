@@ -101,7 +101,7 @@ public:
   // 并查集unions
   void unions(Node* a, Node* b)
   {
-    if (a == NULL || b == NULL)
+    if (a == nullptr || b == nullptr)
     {
       return;
     }

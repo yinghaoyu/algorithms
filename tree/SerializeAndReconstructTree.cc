@@ -27,7 +27,7 @@ class SerializeAndReconstructTree
    *       1__
    *          \
    *           2
-   * 补足空位置的中序遍历结果都是{ NULL, 1, NULL, 2, NULL}
+   * 补足空位置的中序遍历结果都是{ nullptr, 1, nullptr, 2, nullptr}
    *
    * */
 public:
@@ -63,9 +63,9 @@ public:
   // 先序序列化
   static void pres(Node* head, queue<string>& ans)
   {
-    if (head == NULL)
+    if (head == nullptr)
     {
-      ans.push("NULL");
+      ans.push("nullptr");
     }
     else
     {
@@ -85,9 +85,9 @@ public:
   // 中序序列化，生成的树不唯一
   static void ins(Node* head, queue<string>& ans)
   {
-    if (head == NULL)
+    if (head == nullptr)
     {
-      ans.push("NULL");
+      ans.push("nullptr");
     }
     else
     {
@@ -107,9 +107,9 @@ public:
   // 后序序列化
   static void poss(Node* head, queue<string>& ans)
   {
-    if (head == NULL)
+    if (head == nullptr)
     {
-      ans.push("NULL");
+      ans.push("nullptr");
     }
     else
     {
@@ -123,7 +123,7 @@ public:
   {
     if (prelist.size() == 0)
     {
-      return NULL;
+      return nullptr;
     }
     return preb(prelist);
   }
@@ -133,9 +133,9 @@ public:
   {
     string value = prelist.front();
     prelist.pop();
-    if (value == "NULL")
+    if (value == "nullptr")
     {
-      return NULL;
+      return nullptr;
     }
     Node* head = new Node(atoi(value.c_str()));
     head->left = preb(prelist);
@@ -150,7 +150,7 @@ public:
   {
     if (poslist.size() == 0)
     {
-      return NULL;
+      return nullptr;
     }
 
     // 左右中  ->  stack(中右左)
@@ -168,9 +168,9 @@ public:
   {
     string value = posstack.back();
     posstack.pop_back();
-    if (value == "NULL")
+    if (value == "nullptr")
     {
-      return NULL;
+      return nullptr;
     }
     Node* head = new Node(atoi(value.c_str()));
     head->right = posb(posstack);
@@ -182,9 +182,9 @@ public:
   static queue<string> levelSerial(Node* head)
   {
     queue<string> ans;
-    if (head == NULL)
+    if (head == nullptr)
     {
-      ans.push("NULL");
+      ans.push("nullptr");
     }
     else
     {
@@ -195,23 +195,23 @@ public:
       {
         head = queue.front(); // head 父   子
         queue.pop();
-        if (head->left != NULL)
+        if (head->left != nullptr)
         {
           ans.push(std::to_string(head->left->value));
           queue.push(head->left);
         }
         else
         {
-          ans.push("NULL");  // 无左孩子要补空
+          ans.push("nullptr");  // 无左孩子要补空
         }
-        if (head->right != NULL)
+        if (head->right != nullptr)
         {
           ans.push(std::to_string(head->right->value));
           queue.push(head->right);
         }
         else
         {
-          ans.push("NULL");  // 无右孩子要补空
+          ans.push("nullptr");  // 无右孩子要补空
         }
       }
     }
@@ -223,16 +223,16 @@ public:
   {
     if (levelList.size() == 0)
     {
-      return NULL;
+      return nullptr;
     }
     Node* head = generateNode(levelList.front());
     levelList.pop();
     queue<Node*> queue;
-    if (head != NULL)
+    if (head != nullptr)
     {
       queue.push(head);
     }
-    Node* node = NULL;
+    Node* node = nullptr;
     while (!queue.empty())
     {
       node = queue.front();
@@ -241,11 +241,11 @@ public:
       levelList.pop();
       node->right = generateNode(levelList.front());
       levelList.pop();
-      if (node->left != NULL)
+      if (node->left != nullptr)
       {
         queue.push(node->left);
       }
-      if (node->right != NULL)
+      if (node->right != nullptr)
       {
         queue.push(node->right);
       }
@@ -255,9 +255,9 @@ public:
 
   static Node* generateNode(string val)
   {
-    if (val == "NULL")
+    if (val == "nullptr")
     {
-      return NULL;
+      return nullptr;
     }
     return new Node(atoi(val.c_str()));
   }
@@ -273,7 +273,7 @@ public:
   {
     if (level > maxLevel || getRandom(0, MAX_SEED) < HALF_SEED)
     {
-      return NULL;
+      return nullptr;
     }
     Node* head = new Node(getRandom(0, maxValue));
     head->left = generate(level + 1, maxLevel, maxValue);
@@ -284,15 +284,15 @@ public:
   // for test
   static bool isSameValueStructure(Node* head1, Node* head2)
   {
-    if (head1 == NULL && head2 != NULL)
+    if (head1 == nullptr && head2 != nullptr)
     {
       return false;
     }
-    if (head1 != NULL && head2 == NULL)
+    if (head1 != nullptr && head2 == nullptr)
     {
       return false;
     }
-    if (head1 == NULL && head2 == NULL)
+    if (head1 == nullptr && head2 == nullptr)
     {
       return true;
     }
@@ -314,7 +314,7 @@ public:
 
   static void printInOrder(Node* head, int height, string to, int len)
   {
-    if (head == NULL)
+    if (head == nullptr)
     {
       return;
     }

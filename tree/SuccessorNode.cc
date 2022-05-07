@@ -43,11 +43,11 @@ class SuccessorNode
 
     static Node* getSuccessorNode(Node* node)
     {
-      if (node == NULL)
+      if (node == nullptr)
       {
         return node;
       }
-      if (node->right != NULL)
+      if (node->right != nullptr)
       {
         return getLeftMost(node->right);
       }
@@ -55,7 +55,7 @@ class SuccessorNode
       {
         // 无右子树
         Node* parent = node->parent;
-        while (parent != NULL && parent->right == node)
+        while (parent != nullptr && parent->right == node)
         {
           // 当前节点是其父亲节点右孩子
           node = parent;
@@ -67,11 +67,11 @@ class SuccessorNode
 
     static Node* getLeftMost(Node* node)
     {
-      if (node == NULL)
+      if (node == nullptr)
       {
         return node;
       }
-      while (node->left != NULL)
+      while (node->left != nullptr)
       {
         node = node->left;
       }
@@ -81,7 +81,7 @@ class SuccessorNode
     static void test()
     {
       Node* head = new Node(6);
-      head->parent = NULL;
+      head->parent = nullptr;
       head->left = new Node(3);
       head->left->parent = head;
       head->left->left = new Node(1);
@@ -118,7 +118,7 @@ class SuccessorNode
       cout << test->value << " next: " << getSuccessorNode(test)->value <<endl;
       test = head->right;
       cout << test->value << " next: " << getSuccessorNode(test)->value <<endl;
-      test = head->right->right; // 10's next is NULL
+      test = head->right->right; // 10's next is nullptr
       cout << test->value << " next: " << getSuccessorNode(test) <<endl;
     }
 };

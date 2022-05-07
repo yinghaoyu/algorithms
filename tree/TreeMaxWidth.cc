@@ -49,7 +49,7 @@ class TreeMaxWidth
 
     static int maxWidthUseMap(Node* head)
     {
-      if (head == NULL)
+      if (head == nullptr)
       {
         return 0;
       }
@@ -66,12 +66,12 @@ class TreeMaxWidth
         Node* cur = queue.front();
         queue.pop();
         int curNodeLevel = levelMap.at(cur);
-        if (cur->left != NULL)
+        if (cur->left != nullptr)
         {
           levelMap.emplace(cur->left, curNodeLevel + 1);
           queue.push(cur->left);
         }
-        if (cur->right != NULL)
+        if (cur->right != nullptr)
         {
           levelMap.emplace(cur->right, curNodeLevel + 1);
           queue.push(cur->right);
@@ -93,26 +93,26 @@ class TreeMaxWidth
 
     static int maxWidthNoMap(Node* head)
     {
-      if (head == NULL)
+      if (head == nullptr)
       {
         return 0;
       }
       queue<Node*> queue;
       queue.push(head);
       Node* curEnd = head; // 当前层，最右节点是谁
-      Node* nextEnd = NULL; // 下一层，最右节点是谁
+      Node* nextEnd = nullptr; // 下一层，最右节点是谁
       int max = 0;
       int curLevelNodes = 0; // 当前层的节点数
       while (!queue.empty())
       {
         Node* cur = queue.front();
         queue.pop();
-        if (cur->left != NULL)
+        if (cur->left != nullptr)
         {
           queue.emplace(cur->left);
           nextEnd = cur->left;
         }
-        if (cur->right != NULL)
+        if (cur->right != nullptr)
         {
           queue.emplace(cur->right);
           nextEnd = cur->right;
@@ -139,7 +139,7 @@ class TreeMaxWidth
     {
       if (level > maxLevel || getRandom(0, MAX_SEED) < HALF_SEED)
       {
-        return NULL;
+        return nullptr;
       }
       Node* head = new Node(getRandom(0, maxValue));
       head->left = generate(level + 1, maxLevel, maxValue);

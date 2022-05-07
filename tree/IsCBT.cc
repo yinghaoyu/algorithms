@@ -30,15 +30,15 @@ class IsCBT
     // UnRecursive验证二叉树是不是完全二叉树
     static bool isCBT1(Node* head)
     {
-      if (head == NULL)
+      if (head == nullptr)
       {
         return true;
       }
       queue<Node*> queue;
       // 是否遇到过左右两个孩子不双全的节点
       bool leaf = false;
-      Node* l = NULL;
-      Node* r = NULL;
+      Node* l = nullptr;
+      Node* r = nullptr;
       queue.push(head);
       while (!queue.empty())
       {
@@ -48,22 +48,22 @@ class IsCBT
         r = head->right;
         if (
             // 如果遇到了不双全的节点之后，又发现当前节点不是叶节点
-            (leaf && (l != NULL || r != NULL)) // 从遇到的第二个叶子节点开始，就必须左右都没有节点
+            (leaf && (l != nullptr || r != nullptr)) // 从遇到的第二个叶子节点开始，就必须左右都没有节点
             ||
-            (l == NULL && r != NULL)  // 不双全的必须先要有左节点，再有右节点
+            (l == nullptr && r != nullptr)  // 不双全的必须先要有左节点，再有右节点
            )
         {
           return false;
         }
-        if (l != NULL)
+        if (l != nullptr)
         {
           queue.push(l);
         }
-        if (r != NULL)
+        if (r != nullptr)
         {
           queue.push(r);
         }
-        if (l == NULL || r == NULL)  // 第一次遇到叶子节点开始，leaf就变成了true
+        if (l == nullptr || r == nullptr)  // 第一次遇到叶子节点开始，leaf就变成了true
         {
           leaf = true;
         }
@@ -89,7 +89,7 @@ class IsCBT
 
     static Info process(Node* X)
     {
-      if (X == NULL)
+      if (X == nullptr)
       {
         return Info(true, true, 0);
       }
@@ -142,7 +142,7 @@ class IsCBT
     // Recursive验证树是否是满二叉树或者完全二叉树
     static bool isCBT2(Node* head)
     {
-      if (head == NULL)
+      if (head == nullptr)
       {
         return true;
       }
@@ -169,7 +169,7 @@ class IsCBT
     {
       if (level > maxLevel || getRandom(0, MAX_SEED) < HALF_SEED)
       {
-        return NULL;
+        return nullptr;
       }
       Node* head = new Node(getRandom(0, maxValue));
       head->left = generate(level + 1, maxLevel, maxValue);

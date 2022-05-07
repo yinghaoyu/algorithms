@@ -23,7 +23,7 @@ void swap(int arr[], int i, int j)
 
 void insertionSort(int arr[])
 {
-  if (arr == NULL || N < 2)
+  if (arr == nullptr || N < 2)
   {
     return;
   }

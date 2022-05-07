@@ -15,7 +15,7 @@ class Knapsack
   public:
     static int maxValue(int w[], int v[], int wlen, int vlen, int bag)
     {
-      if (w == NULL || v == NULL || wlen != vlen || wlen == 0)
+      if (w == nullptr || v == nullptr || wlen != vlen || wlen == 0)
       {
         return 0;
       }
@@ -55,7 +55,7 @@ class Knapsack
     // 可见决策3位置后是重复调用的，这就给优化提供了空间，比如用缓存表。
     static int dp(int w[], int v[], int wlen, int vlen, int bag)
     {
-      if (w == NULL || v == NULL || wlen != vlen || wlen == 0)
+      if (w == nullptr || v == nullptr || wlen != vlen || wlen == 0)
       {
         return 0;
       }

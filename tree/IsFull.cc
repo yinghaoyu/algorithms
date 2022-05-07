@@ -29,7 +29,7 @@ class IsFull
 
     static int h(Node* head)
     {
-      if (head == NULL)
+      if (head == nullptr)
       {
         return 0;
       }
@@ -38,7 +38,7 @@ class IsFull
 
     static int n(Node* head)
     {
-      if (head == NULL)
+      if (head == nullptr)
       {
         return 0;
       }
@@ -47,7 +47,7 @@ class IsFull
 
     static bool isFull1(Node* head)
     {
-      if (head == NULL)
+      if (head == nullptr)
       {
         return true;
       }
@@ -71,7 +71,7 @@ class IsFull
 
     static Info process(Node* head)
     {
-      if (head == NULL)
+      if (head == nullptr)
       {
         return Info(0, 0);
       }
@@ -84,7 +84,7 @@ class IsFull
 
     static bool isFull2(Node* head)
     {
-      if (head == NULL)
+      if (head == nullptr)
       {
         return true;
       }
@@ -112,7 +112,7 @@ class IsFull
     {
       if (level > maxLevel || getRandom(0, MAX_SEED) < HALF_SEED)
       {
-        return NULL;
+        return nullptr;
       }
       Node* head = new Node(getRandom(0, maxValue));
       head->left = generate(level + 1, maxLevel, maxValue);

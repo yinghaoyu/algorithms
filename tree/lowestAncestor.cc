@@ -16,12 +16,12 @@ typedef struct Node
 // key, value 子节点指针，父节点指针
 void fillParentMap(Node* head, unordered_map<Node*, Node*>& parentMap)
 {
-  if (head->left != NULL)
+  if (head->left != nullptr)
   {
     parentMap.emplace(head->left, head);
     fillParentMap(head->left, parentMap);
   }
-  if (head->right != NULL)
+  if (head->right != nullptr)
   {
     parentMap.emplace(head->right, head);
     fillParentMap(head->right, parentMap);
@@ -31,13 +31,13 @@ void fillParentMap(Node* head, unordered_map<Node*, Node*>& parentMap)
 // 查找两个节点最近的祖先
 Node* lowestAncestor1(Node* head, Node* o1, Node* o2)
 {
-  if (head == NULL)
+  if (head == nullptr)
   {
-    return NULL;
+    return nullptr;
   }
   // key的父节点是value
   unordered_map<Node*, Node*> parentMap;
-  parentMap.emplace(head, NULL);
+  parentMap.emplace(head, nullptr);
   fillParentMap(head, parentMap);
   unordered_set<Node*> o1Set;
   Node* cur = o1;
@@ -71,20 +71,20 @@ typedef struct Info
 
 Info process(Node* x, Node* a, Node* b)
 {
-  if (x == NULL)
+  if (x == nullptr)
   {
-    return Info(false, false, NULL);
+    return Info(false, false, nullptr);
   }
   Info leftInfo = process(x->left, a, b);
   Info rightInfo = process(x->right, a, b);
   bool findA = (x == a) || leftInfo.findA || rightInfo.findA;
   bool findB = (x == b) || leftInfo.findB || rightInfo.findB;
-  Node* ans = NULL;
-  if (leftInfo.ans != NULL)
+  Node* ans = nullptr;
+  if (leftInfo.ans != nullptr)
   {
     ans = leftInfo.ans;  // 向上传递左子树的结果
   }
-  else if (rightInfo.ans != NULL)
+  else if (rightInfo.ans != nullptr)
   {
     ans = rightInfo.ans;  // 向上传递右子树的结果
   }

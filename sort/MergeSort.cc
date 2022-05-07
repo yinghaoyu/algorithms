@@ -49,7 +49,7 @@ void process(int arr[], int L, int R)
 // 递归方法实现
 void mergeSort1(int arr[])
 {
-  if (arr == NULL || SIZE < 2)
+  if (arr == nullptr || SIZE < 2)
   {
     return;
   }
@@ -58,7 +58,7 @@ void mergeSort1(int arr[])
 
 // 非递归方法实现
 void mergeSort2(int arr[]) {
-  if (arr == NULL || SIZE < 2)
+  if (arr == nullptr || SIZE < 2)
   {
     return;
   }

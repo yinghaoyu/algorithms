@@ -51,7 +51,7 @@ public:
 // 从distanceMap中找出不在touchedNodes的距离最短的点
 Node* getMinDistanceAndUnselectedNode(unordered_map<Node*, int>& distanceMap, unordered_set<Node*>& touchedNodes)
 {
-  Node* minNode = NULL;
+  Node* minNode = nullptr;
   int minDistance = INT32_MAX;
   for (auto entry : distanceMap)
   {
@@ -75,7 +75,7 @@ unordered_map<Node*, int> dijkstra1(Node* from)
   unordered_set<Node*> selectedNodes;
   // 选出未选中的距离最短的可达节点
   Node* minNode = getMinDistanceAndUnselectedNode(distanceMap, selectedNodes);
-  while (minNode != NULL)
+  while (minNode != nullptr)
   {
     //  原始点  ->  minNode(跳转点)   最小距离distance
     int distance = distanceMap.at(minNode);
@@ -156,7 +156,7 @@ public:
     heapIndexMap[nodes[size - 1]] = -1;
     distanceMap.erase(nodes[size - 1]);
     // free C++还要把原本堆顶节点析构
-    nodes[size - 1] = NULL;
+    nodes[size - 1] = nullptr;
     heapify(0, --size);
     return nodeRecord;
   }

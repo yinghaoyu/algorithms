@@ -26,7 +26,7 @@ class Node
 // 一般的递归写法
 void process(Node* root)
 {
-  if (root == NULL)
+  if (root == nullptr)
   {
     return;
   }
@@ -40,24 +40,24 @@ void process(Node* root)
 // morris遍历结构
 void morris(Node* head)
 {
-  if (head == NULL)
+  if (head == nullptr)
   {
     return;
   }
 
   Node* cur = head;
-  Node* mostRight = NULL;  // 指向左孩子的最右节点
-  while (cur != NULL)
+  Node* mostRight = nullptr;  // 指向左孩子的最右节点
+  while (cur != nullptr)
   {
     mostRight = cur->left;
-    if (mostRight != NULL)  // 有左孩子
+    if (mostRight != nullptr)  // 有左孩子
     {
-      while (mostRight->right != NULL && mostRight->right != cur)
+      while (mostRight->right != nullptr && mostRight->right != cur)
       {
         mostRight = mostRight->right; // 找到左孩子最右的节点
       }
       // 左孩子的最右节点开始时是叶子节点
-      if (mostRight->right == NULL)  // 如果没有被改动过
+      if (mostRight->right == nullptr)  // 如果没有被改动过
       {
         mostRight->right = cur;  // 把这个指针指向当前节点
         cur = cur->left;  // 遍历左孩子
@@ -65,7 +65,7 @@ void morris(Node* head)
       }
       else  // 如果我们改动过
       {
-        mostRight->right = NULL;  // 恢复为叶子节点
+        mostRight->right = nullptr;  // 恢复为叶子节点
       }
     }
     cur = cur->right;  // 左孩子都遍历结束，轮到右孩子了
@@ -75,22 +75,22 @@ void morris(Node* head)
 // morris先序遍历
 void morrisPre(Node* head)
 {
-  if (head == NULL)
+  if (head == nullptr)
   {
     return;
   }
   Node* cur = head;
-  Node* mostRight = NULL;
-  while (cur != NULL)
+  Node* mostRight = nullptr;
+  while (cur != nullptr)
   {
     mostRight = cur->left;
-    if (mostRight != NULL)
+    if (mostRight != nullptr)
     {
-      while (mostRight->right != NULL && mostRight->right != cur)
+      while (mostRight->right != nullptr && mostRight->right != cur)
       {
         mostRight = mostRight->right;
       }
-      if (mostRight->right == NULL)
+      if (mostRight->right == nullptr)
       {
         // Morris遍历有些节点会遍历2次
         cout << cur->value << " ";  // 第一次遍历cur为找到左孩子的最右节点为空的时候
@@ -101,7 +101,7 @@ void morrisPre(Node* head)
       else
       {
         // 恢复节点指针是第二次遍历cur就不处理
-        mostRight->right = NULL;
+        mostRight->right = nullptr;
       }
     }
     else // 没有左孩子的时候，这个节点只会遍历一次
@@ -116,22 +116,22 @@ void morrisPre(Node* head)
 // morris中序遍历
 void morrisIn(Node* head)
 {
-  if (head == NULL)
+  if (head == nullptr)
   {
     return;
   }
   Node* cur = head;
-  Node* mostRight = NULL;
-  while (cur != NULL)
+  Node* mostRight = nullptr;
+  while (cur != nullptr)
   {
     mostRight = cur->left;
-    if (mostRight != NULL) // 处理左孩子
+    if (mostRight != nullptr) // 处理左孩子
     {
-      while (mostRight->right != NULL && mostRight->right != cur)
+      while (mostRight->right != nullptr && mostRight->right != cur)
       {
         mostRight = mostRight->right;
       }
-      if (mostRight->right == NULL)
+      if (mostRight->right == nullptr)
       {
         mostRight->right = cur;
         cur = cur->left;
@@ -139,7 +139,7 @@ void morrisIn(Node* head)
       }
       else
       {
-        mostRight->right = NULL;
+        mostRight->right = nullptr;
       }
     }
     cout << cur->value << " ";  // 处理根
@@ -150,9 +150,9 @@ void morrisIn(Node* head)
 
 Node* reverseEdge(Node* from)
 {
-  Node* pre = NULL;
-  Node* next = NULL;
-  while (from != NULL)
+  Node* pre = nullptr;
+  Node* next = nullptr;
+  while (from != nullptr)
   {
     next = from->right;
     from->right = pre;
@@ -166,7 +166,7 @@ void printEdge(Node* head)
 {
   Node* tail = reverseEdge(head);
   Node* cur = tail;
-  while (cur != NULL)
+  while (cur != nullptr)
   {
     cout << cur->value << " ";
     cur = cur->right;
@@ -176,22 +176,22 @@ void printEdge(Node* head)
 
 void morrisPos(Node* head)
 {
-  if (head == NULL)
+  if (head == nullptr)
   {
     return;
   }
   Node* cur = head;
-  Node* mostRight = NULL;
-  while (cur != NULL)
+  Node* mostRight = nullptr;
+  while (cur != nullptr)
   {
     mostRight = cur->left;
-    if (mostRight != NULL)
+    if (mostRight != nullptr)
     {
-      while (mostRight->right != NULL && mostRight->right != cur)
+      while (mostRight->right != nullptr && mostRight->right != cur)
       {
         mostRight = mostRight->right;
       }
-      if (mostRight->right == NULL)
+      if (mostRight->right == nullptr)
       {
         mostRight->right = cur;
         cur = cur->left;
@@ -199,7 +199,7 @@ void morrisPos(Node* head)
       }
       else
       {
-        mostRight->right = NULL;
+        mostRight->right = nullptr;
         printEdge(cur->left);
       }
     }

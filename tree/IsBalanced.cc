@@ -29,7 +29,7 @@ class IsBalanced
 
     static int process1(Node* head, bool& ans)
     {
-      if (!ans || head == NULL)
+      if (!ans || head == nullptr)
       {
         return -1;
       }
@@ -65,7 +65,7 @@ class IsBalanced
 
     static Info process(Node* x)
     {
-      if(x == NULL)
+      if(x == nullptr)
       {
         return Info(true, 0);
       }
@@ -114,7 +114,7 @@ class IsBalanced
     {
       if (level > maxLevel || getRandom(0, MAX_SEED) < HALF_SEED)
       {
-        return NULL;
+        return nullptr;
       }
       Node* head = new Node(getRandom(0, maxValue));
       head->left = generate(level + 1, maxLevel, maxValue);

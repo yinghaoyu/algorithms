@@ -19,7 +19,7 @@ void printArr(int arr[], int len)
 // only for 0~200 value
 void countSort(int arr[], int len)
 {
-  if (arr == NULL || len < 2)
+  if (arr == nullptr || len < 2)
   {
     return;
   }

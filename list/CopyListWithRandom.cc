@@ -39,8 +39,8 @@ class CopyListWithRandom
         Node(int val)
         {
           this->val = val;
-          this->next = NULL;
-          this->random = NULL;
+          this->next = nullptr;
+          this->random = nullptr;
         }
     };
 
@@ -50,14 +50,14 @@ class CopyListWithRandom
       // value 新节点
       unordered_map<Node*, Node*> map;
       Node* cur = head;
-      while (cur != NULL)
+      while (cur != nullptr)
       {
         // 构造老节点对应的新节点
         map.emplace(cur, new Node(cur->val));
         cur = cur->next;
       }
       cur = head;
-      while (cur != NULL)
+      while (cur != nullptr)
       {
         // cur 老
         // map.at(cur) 新
@@ -71,15 +71,15 @@ class CopyListWithRandom
 
     static Node* copyRandomList2(Node* head)
     {
-      if (head == NULL)
+      if (head == nullptr)
       {
-        return NULL;
+        return nullptr;
       }
       Node* cur = head;
-      Node* next = NULL;
-      // 1 -> 2 -> 3 -> NULL
+      Node* next = nullptr;
+      // 1 -> 2 -> 3 -> nullptr
       // 1 -> 1' -> 2 -> 2' -> 3 -> 3'
-      while (cur != NULL)
+      while (cur != nullptr)
       {
         next = cur->next;
         cur->next = new Node(cur->val);
@@ -87,26 +87,26 @@ class CopyListWithRandom
         cur = next;
       }
       cur = head;
-      Node* copy = NULL;
+      Node* copy = nullptr;
       // 1 1' 2 2' 3 3'
       // 依次设置 1' 2' 3' random指针
-      while (cur != NULL)
+      while (cur != nullptr)
       {
         next = cur->next->next;
         copy = cur->next;
-        copy->random = cur->random != NULL ? cur->random->next : NULL;
+        copy->random = cur->random != nullptr ? cur->random->next : nullptr;
         cur = next;
       }
       Node* res = head->next;
       cur = head;
       // 老 新 混在一起，next方向上，random正确
       // next方向上，把新老链表分离
-      while (cur != NULL)
+      while (cur != nullptr)
       {
         next = cur->next->next;
         copy = cur->next;
         cur->next = next;
-        copy->next = next != NULL ? next->next : NULL;
+        copy->next = next != nullptr ? next->next : nullptr;
         cur = next;
       }
       return res;

@@ -30,13 +30,13 @@ class SmallerEqualBigger
 
     static Node* listPartition1(Node* head, int pivot)
     {
-      if (head == NULL)
+      if (head == nullptr)
       {
         return head;
       }
       Node* cur = head;
       int i = 0;
-      while (cur != NULL)
+      while (cur != nullptr)
       {
         i++;
         cur = cur->next;
@@ -55,7 +55,7 @@ class SmallerEqualBigger
       {
         nodeArr[i - 1]->next = nodeArr[i];
       }
-      nodeArr[i - 1]->next = NULL;
+      nodeArr[i - 1]->next = nullptr;
       return nodeArr[0];
     }
 
@@ -89,21 +89,21 @@ class SmallerEqualBigger
     }
 
     static Node* listPartition2(Node* head, int pivot) {
-      Node* sH = NULL; // small head
-      Node* sT = NULL; // small tail
-      Node* eH = NULL; // equal head
-      Node* eT = NULL; // equal tail
-      Node* mH = NULL; // big head
-      Node* mT = NULL; // big tail
-      Node* next = NULL; // save->next node
+      Node* sH = nullptr; // small head
+      Node* sT = nullptr; // small tail
+      Node* eH = nullptr; // equal head
+      Node* eT = nullptr; // equal tail
+      Node* mH = nullptr; // big head
+      Node* mT = nullptr; // big tail
+      Node* next = nullptr; // save->next node
                          // every node distributed to three lists
-      while (head != NULL)
+      while (head != nullptr)
       {
         next = head->next;
-        head->next = NULL;
+        head->next = nullptr;
         if (head->value < pivot)
         {
-          if (sH == NULL)
+          if (sH == nullptr)
           {
             sH = head;
             sT = head;
@@ -116,7 +116,7 @@ class SmallerEqualBigger
         }
         else if (head->value == pivot)
         {
-          if (eH == NULL)
+          if (eH == nullptr)
           {
             eH = head;
             eT = head;
@@ -129,7 +129,7 @@ class SmallerEqualBigger
         }
         else
         {
-          if (mH == NULL)
+          if (mH == nullptr)
           {
             mH = head;
             mT = head;
@@ -143,28 +143,28 @@ class SmallerEqualBigger
         head = next;
       }
       // 小于区域的尾巴，连等于区域的头，等于区域的尾巴连大于区域的头
-      if (sT != NULL)
+      if (sT != nullptr)
       {
         // 如果有小于区域
         sT->next = eH;
-        eT = eT == NULL ? sT : eT; // 下一步，谁去连大于区域的头，谁就变成eT
+        eT = eT == nullptr ? sT : eT; // 下一步，谁去连大于区域的头，谁就变成eT
       }
       // 下一步，一定是需要用eT 去接 大于区域的头
       // 有等于区域，eT -> 等于区域的尾结点
       // 无等于区域，eT -> 小于区域的尾结点
       // eT 尽量不为空的尾巴节点
-      if (eT != NULL)
+      if (eT != nullptr)
       {
         // 如果小于区域和等于区域，不是都没有
         eT->next = mH;
       }
-      return sH != NULL ? sH : (eH != NULL ? eH : mH);
+      return sH != nullptr ? sH : (eH != nullptr ? eH : mH);
     }
 
     static void printLinkedList(Node* node)
     {
       cout << "Linked List: ";
-      while (node != NULL)
+      while (node != nullptr)
       {
         cout << node->value << " ";
         node = node->next;

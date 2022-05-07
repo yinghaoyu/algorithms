@@ -22,7 +22,7 @@ class CountOfRangeSum
   public:
     static int countRangeSum(int nums[], int len, int lower, int upper)
     {
-      if (nums == NULL || len == 0)
+      if (nums == nullptr || len == 0)
       {
         return 0;
       }

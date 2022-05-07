@@ -89,7 +89,7 @@ int pop()
 
 // 堆排序额外空间复杂度O(1)
 void heapSort(int arr[], int len) {
-  if (arr == NULL || len < 2)
+  if (arr == nullptr || len < 2)
   {
     return;
   }

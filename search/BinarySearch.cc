@@ -10,7 +10,7 @@ int sortedArr[N];
 
 bool exist(int sortedArr[], int num)
 {
-  if (sortedArr == NULL || N == 0)
+  if (sortedArr == nullptr || N == 0)
   {
     return false;
   }

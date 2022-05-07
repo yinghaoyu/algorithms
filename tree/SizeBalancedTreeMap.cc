@@ -39,7 +39,7 @@ public:
 
     SizeBalancedTreeMap()
     {
-      root = NULL;
+      root = nullptr;
     }
 
     SBTNode<K, V>* rightRotate(SBTNode<K, V>* cur)
@@ -48,7 +48,7 @@ public:
       cur->l = leftNode->r;
       leftNode->r = cur;
       leftNode->size = cur->size;
-      cur->size = (cur->l != NULL ? cur->l->size : 0) + (cur->r != NULL ? cur->r->size : 0) + 1;
+      cur->size = (cur->l != nullptr ? cur->l->size : 0) + (cur->r != nullptr ? cur->r->size : 0) + 1;
       return leftNode;
     }
 
@@ -58,21 +58,21 @@ public:
       cur->r = rightNode->l;
       rightNode->l = cur;
       rightNode->size = cur->size;
-      cur->size = (cur->l != NULL ? cur->l->size : 0) + (cur->r != NULL ? cur->r->size : 0) + 1;
+      cur->size = (cur->l != nullptr ? cur->l->size : 0) + (cur->r != nullptr ? cur->r->size : 0) + 1;
       return rightNode;
     }
     SBTNode<K, V>* maintain(SBTNode<K, V>* cur)
     {
-      if (cur == NULL)
+      if (cur == nullptr)
       {
-        return NULL;
+        return nullptr;
       }
-      int leftSize = cur->l != NULL ? cur->l->size : 0;
-      int leftLeftSize = cur->l != NULL && cur->l->l != NULL ? cur->l->l->size : 0;
-      int leftRightSize = cur->l != NULL && cur->l->r != NULL ? cur->l->r->size : 0;
-      int rightSize = cur->r != NULL ? cur->r->size : 0;
-      int rightLeftSize = cur->r != NULL && cur->r->l != NULL ? cur->r->l->size : 0;
-      int rightRightSize = cur->r != NULL && cur->r->r != NULL ? cur->r->r->size : 0;
+      int leftSize = cur->l != nullptr ? cur->l->size : 0;
+      int leftLeftSize = cur->l != nullptr && cur->l->l != nullptr ? cur->l->l->size : 0;
+      int leftRightSize = cur->l != nullptr && cur->l->r != nullptr ? cur->l->r->size : 0;
+      int rightSize = cur->r != nullptr ? cur->r->size : 0;
+      int rightLeftSize = cur->r != nullptr && cur->r->l != nullptr ? cur->r->l->size : 0;
+      int rightRightSize = cur->r != nullptr && cur->r->r != nullptr ? cur->r->r->size : 0;
       if (leftLeftSize > rightSize)
       {
         cur = rightRotate(cur);
@@ -108,7 +108,7 @@ public:
     {
       SBTNode<K, V>* pre = root;
       SBTNode<K, V>* cur = root;
-      while (cur != NULL) {
+      while (cur != nullptr) {
         pre = cur;
         if (key.compare(cur->key) == 0)
         {
@@ -128,9 +128,9 @@ public:
 
     SBTNode<K, V>* findLastNoSmallIndex(K key)
     {
-      SBTNode<K, V>* ans = NULL;
+      SBTNode<K, V>* ans = nullptr;
       SBTNode<K, V>* cur = root;
-      while (cur != NULL) {
+      while (cur != nullptr) {
         if (key.compare(cur->key) == 0)
         {
           ans = cur;
@@ -151,9 +151,9 @@ public:
 
     SBTNode<K, V>* findLastNoBigIndex(K key)
     {
-      SBTNode<K, V>* ans = NULL;
+      SBTNode<K, V>* ans = nullptr;
       SBTNode<K, V>* cur = root;
-      while (cur != NULL)
+      while (cur != nullptr)
       {
         if (key.compare(cur->key) == 0)
         {
@@ -178,7 +178,7 @@ public:
     // 返回，调整完之后，整棵树的新头部
     SBTNode<K, V>* add(SBTNode<K, V>* cur, K key, V value)
     {
-      if (cur == NULL)
+      if (cur == nullptr)
       {
         return new SBTNode<K, V>(key, value);
       }
@@ -213,17 +213,17 @@ public:
       else
       {
         // 当前要删掉cur
-        if (cur->l == NULL && cur->r == NULL)
+        if (cur->l == nullptr && cur->r == nullptr)
         {
           // free cur memory -> C++
-          cur = NULL;
+          cur = nullptr;
         }
-        else if (cur->l == NULL && cur->r != NULL)
+        else if (cur->l == nullptr && cur->r != nullptr)
         {
           // free cur memory -> C++
           cur = cur->r;
         }
-        else if (cur->l != NULL && cur->r == NULL)
+        else if (cur->l != nullptr && cur->r == nullptr)
         {
           // free cur memory -> C++
           cur = cur->l;
@@ -231,22 +231,22 @@ public:
         else
         {
           // 有左有右
-          SBTNode<K, V>* pre = NULL;
+          SBTNode<K, V>* pre = nullptr;
           SBTNode<K, V>* des = cur->r;
           des->size--;
-          while (des->l != NULL)
+          while (des->l != nullptr)
           {
             pre = des;
             des = des->l;
             des->size--;
           }
-          if (pre != NULL)
+          if (pre != nullptr)
           {
             pre->l = des->r;
             des->r = cur->r;
           }
           des->l = cur->l;
-          des->size = des->l->size + (des->r == NULL ? 0 : des->r->size) + 1;
+          des->size = des->l->size + (des->r == nullptr ? 0 : des->r->size) + 1;
           // free cur memory -> C++
           cur = des;
         }
@@ -257,23 +257,23 @@ public:
 
     SBTNode<K, V>* getIndex(SBTNode<K, V>* cur, int kth)
     {
-      if (kth == (cur->l != NULL ? cur->l->size : 0) + 1) 
+      if (kth == (cur->l != nullptr ? cur->l->size : 0) + 1) 
       {
         return cur;
       }
-      else if (kth <= (cur->l != NULL ? cur->l->size : 0))
+      else if (kth <= (cur->l != nullptr ? cur->l->size : 0))
       {
         return getIndex(cur->l, kth);
       }
       else
       {
-        return getIndex(cur->r, kth - (cur->l != NULL ? cur->l->size : 0) - 1);
+        return getIndex(cur->r, kth - (cur->l != nullptr ? cur->l->size : 0) - 1);
       }
     }
 
     int size()
     {
-      return root == NULL ? 0 : root->size;
+      return root == nullptr ? 0 : root->size;
     }
 
     bool containsKey(K key)
@@ -283,7 +283,7 @@ public:
         return true;
       }
       SBTNode<K, V>* lastNode = findLastIndex(key);
-      return lastNode != NULL && key.compare(lastNode->key) == 0 ? true : false;
+      return lastNode != nullptr && key.compare(lastNode->key) == 0 ? true : false;
     }
 
     // （key，value） put -> 有序表 新增、改value
@@ -294,7 +294,7 @@ public:
         return;
       }
       SBTNode<K, V>* lastNode = findLastIndex(key);
-      if (lastNode != NULL && key.compare(lastNode->key) == 0)
+      if (lastNode != nullptr && key.compare(lastNode->key) == 0)
       {
         lastNode->value = value;
       }
@@ -320,7 +320,7 @@ public:
     {
       if (index < 0 || index >= this->size())
       {
-        return "NULL";
+        return "nullptr";
       }
       return getIndex(root, index + 1)->key;
     }
@@ -341,7 +341,7 @@ public:
         return INT_MAX;
       }
       SBTNode<K, V>* lastNode = findLastIndex(key);
-      if (lastNode != NULL && key.compare(lastNode->key) == 0)
+      if (lastNode != nullptr && key.compare(lastNode->key) == 0)
       {
         return lastNode->value;
       }
@@ -353,12 +353,12 @@ public:
 
     K firstKey()
     {
-      if (root == NULL)
+      if (root == nullptr)
       {
-        return "NULL";
+        return "nullptr";
       }
       SBTNode<K, V>* cur = root;
-      while (cur->l != NULL)
+      while (cur->l != nullptr)
       {
         cur = cur->l;
       }
@@ -367,12 +367,12 @@ public:
 
     K lastKey()
     {
-      if (root == NULL)
+      if (root == nullptr)
       {
-        return "NULL";
+        return "nullptr";
       }
       SBTNode<K, V>* cur = root;
-      while (cur->r != NULL)
+      while (cur->r != nullptr)
       {
         cur = cur->r;
       }
@@ -383,20 +383,20 @@ public:
     {
       if (key == "")
       {
-        return "NULL";
+        return "nullptr";
       }
       SBTNode<K, V>* lastNoBigNode = findLastNoBigIndex(key);
-      return lastNoBigNode == NULL ? "NULL" : lastNoBigNode->key;
+      return lastNoBigNode == nullptr ? "nullptr" : lastNoBigNode->key;
     }
 
     K ceilingKey(K key)
     {
       if (key == "")
       {
-        return "NULL";
+        return "nullptr";
       }
       SBTNode<K, V>* lastNoSmallNode = findLastNoSmallIndex(key);
-      return lastNoSmallNode == NULL ? "NULL" : lastNoSmallNode->key;
+      return lastNoSmallNode == nullptr ? "nullptr" : lastNoSmallNode->key;
     }
 
     // for test
@@ -410,7 +410,7 @@ public:
     // for test
     void printInOrder(SBTNode<string, int>* head, int height, string to, int len)
     {
-      if (head == NULL)
+      if (head == nullptr)
       {
         return;
       }

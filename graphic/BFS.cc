@@ -50,7 +50,7 @@ public:
 // 从node出发，进行宽度优先遍历
 void bfs(Node* start)
 {
-  if (start == NULL)
+  if (start == nullptr)
   {
     return;
   }

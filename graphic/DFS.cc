@@ -49,7 +49,7 @@ public:
 };
 void dfs(Node* node)
 {
-  if (node == NULL)
+  if (node == nullptr)
   {
     return;
   }

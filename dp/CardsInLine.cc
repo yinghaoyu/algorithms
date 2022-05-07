@@ -13,7 +13,7 @@ class CardsInLine
     // 根据规则，返回获胜者的分数
     static int win1(int arr[], int len)
     {
-      if (arr == NULL || len == 0)
+      if (arr == nullptr || len == 0)
       {
         return 0;
       }
@@ -48,7 +48,7 @@ class CardsInLine
 
     static int win2(int arr[], int len)
     {
-      if (arr == NULL || len == 0)
+      if (arr == nullptr || len == 0)
       {
         return 0;
       }
@@ -131,7 +131,7 @@ class CardsInLine
     // 根据规律，可以按对角线从左往右填
     static int win3(int arr[], int len)
     {
-      if (arr == NULL || len == 0)
+      if (arr == nullptr || len == 0)
       {
         return 0;
       }

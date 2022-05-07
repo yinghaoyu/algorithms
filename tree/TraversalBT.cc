@@ -32,7 +32,7 @@ class TraversalBT
     // Recursive先序
     static void pre(Node* head)
     {
-      if(head == NULL)
+      if(head == nullptr)
       {
         return;
       }
@@ -44,7 +44,7 @@ class TraversalBT
     // Recursive中序
     static void in(Node* head)
     {
-      if(head == NULL)
+      if(head == nullptr)
       {
         return;
       }
@@ -56,7 +56,7 @@ class TraversalBT
     // Recursive后序
     static void pos(Node* head)
     {
-      if(head == NULL)
+      if(head == nullptr)
       {
         return;
       }
@@ -72,7 +72,7 @@ class TraversalBT
     //（4）一直执行2、3步，直到栈为空。
     static void preUnRecursive(Node* head)
     {
-      if (head != NULL)
+      if (head != nullptr)
       {
         vector<Node*> stack;
         stack.push_back(head);
@@ -81,11 +81,11 @@ class TraversalBT
           head = stack.back();
           stack.pop_back();
           cout << head->value; // 先处理根节点
-          if (head->right != NULL)
+          if (head->right != nullptr)
           {
             stack.push_back(head->right);
           }
-          if (head->left != NULL)
+          if (head->left != nullptr)
           {
             stack.push_back(head->left);
           }
@@ -100,11 +100,11 @@ class TraversalBT
     //（4）当栈为空时结束
     static void inUnRecursive(Node* cur)
     {
-      if (cur != NULL) {
+      if (cur != nullptr) {
         vector<Node*> stack;
-        while (!stack.empty() || cur != NULL)
+        while (!stack.empty() || cur != nullptr)
         {
-          if (cur != NULL)  // 先把左孩子全部入栈
+          if (cur != nullptr)  // 先把左孩子全部入栈
           {
             stack.push_back(cur);
             cur = cur->left;
@@ -129,7 +129,7 @@ class TraversalBT
     // 相当于stackA出栈顺序是 根右左，最后stackB出栈顺序是 左右根。
     static void pos1(Node* head)
     {
-      if (head != NULL)
+      if (head != nullptr)
       {
         vector<Node*> s1;
         vector<Node*> s2;
@@ -139,11 +139,11 @@ class TraversalBT
           head = s1.back();
           s1.pop_back(); // 根 右 左
           s2.push_back(head);
-          if (head->left != NULL)
+          if (head->left != nullptr)
           {
             s1.push_back(head->left);
           }
-          if (head->right != NULL)
+          if (head->right != nullptr)
           {
             s1.push_back(head->right);
           }
@@ -160,19 +160,19 @@ class TraversalBT
     // UnRecursive后序
     static void pos2(Node* head)
     {
-      if (head != NULL)
+      if (head != nullptr)
       {
         vector<Node*> stack;
         stack.push_back(head);
-        Node* c = NULL;
+        Node* c = nullptr;
         while (!stack.empty())
         {
           c = stack.back();
-          if (c->left != NULL && head != c->left && head != c->right)
+          if (c->left != nullptr && head != c->left && head != c->right)
           {
             stack.push_back(c->left);
           }
-          else if (c->right != NULL && head != c->right)
+          else if (c->right != nullptr && head != c->right)
           {
             stack.push_back(c->right);
           }
@@ -189,7 +189,7 @@ class TraversalBT
     // bfs层序遍历
     static void level(Node* head)
     {
-      if (head == NULL)
+      if (head == nullptr)
       {
         return;
       }
@@ -200,11 +200,11 @@ class TraversalBT
         Node* cur = queue.front();
         queue.pop();
         cout << cur->value;
-        if (cur->left != NULL)
+        if (cur->left != nullptr)
         {
           queue.push(cur->left);
         }
-        if (cur->right != NULL)
+        if (cur->right != nullptr)
         {
           queue.push(cur->right);
         }

@@ -18,7 +18,7 @@ int getRandom(int min, int max)
 // for test
 void printArray(int arr[], int len)
 {
-  if (arr == NULL)
+  if (arr == nullptr)
   {
     return;
   }
@@ -115,7 +115,7 @@ void process1(int arr[], int L, int R)
 
 void quickSort1(int arr[], int len)
 {
-  if (arr == NULL || len < 2)
+  if (arr == nullptr || len < 2)
   {
     return;
   }
@@ -137,7 +137,7 @@ void process2(int arr[], int L, int R)
 
 void quickSort2(int arr[], int len)
 {
-  if (arr == NULL || len < 2)
+  if (arr == nullptr || len < 2)
   {
     return;
   }
@@ -159,7 +159,7 @@ void process3(int arr[], int L, int R)
 
 void quickSort3(int arr[], int len)
 {
-  if (arr == NULL || len < 2)
+  if (arr == nullptr || len < 2)
   {
     return;
   }
@@ -181,9 +181,9 @@ int* generateRandomArray(int maxSize, int maxValue, int* len)
 // for test
 int* copyArray(int arr[], int len)
 {
-  if (arr == NULL)
+  if (arr == nullptr)
   {
-    return NULL;
+    return nullptr;
   }
   int* res = new int[len];
   for (int i = 0; i < len; i++)
@@ -196,11 +196,11 @@ int* copyArray(int arr[], int len)
 // for test
 bool isEqual(int arr1[], int arr2[], int len1, int len2)
 {
-  if ((arr1 == NULL && arr2 != NULL) || (arr1 != NULL && arr2 == NULL))
+  if ((arr1 == nullptr && arr2 != nullptr) || (arr1 != nullptr && arr2 == nullptr))
   {
     return false;
   }
-  if (arr1 == NULL && arr2 == NULL) {
+  if (arr1 == nullptr && arr2 == nullptr) {
     return true;
   }
   if (len1 != len2)

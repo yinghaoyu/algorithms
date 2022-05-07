@@ -24,7 +24,7 @@ class SmallSum
 
     static int smallSum(int arr[], int len)
     {
-      if (arr == NULL || len < 2)
+      if (arr == nullptr || len < 2)
       {
         return 0;
       }
@@ -83,7 +83,7 @@ class SmallSum
     // for test
     static int comparator(int arr[], int len)
     {
-      if (arr == NULL || len < 2)
+      if (arr == nullptr || len < 2)
       {
         return 0;
       }
@@ -113,9 +113,9 @@ class SmallSum
     // for test
     static int* copyArray(int* arr, int len)
     {
-      if (arr == NULL)
+      if (arr == nullptr)
       {
-        return NULL;
+        return nullptr;
       }
       int* res = new int[len];
       for (int i = 0; i < len; i++)
@@ -128,11 +128,11 @@ class SmallSum
     // for test
     static bool isEqual(int arr1[], int arr2[], int len1, int len2)
     {
-      if ((arr1 == NULL && arr2 != NULL) || (arr1 != NULL && arr2 == NULL))
+      if ((arr1 == nullptr && arr2 != nullptr) || (arr1 != nullptr && arr2 == nullptr))
       {
         return false;
       }
-      if (arr1 == NULL && arr2 == NULL)
+      if (arr1 == nullptr && arr2 == nullptr)
       {
         return true;
       }
@@ -153,7 +153,7 @@ class SmallSum
     // for test
     static void printArray(int arr[], int len)
     {
-      if (arr == NULL)
+      if (arr == nullptr)
       {
         return;
       }

@@ -26,9 +26,9 @@ public:
 //   a    ->   b    ->  c  ->  null
 //   c    ->   b    ->  a  ->  null
 Node* reverseLinkedList(Node* head) {
-  Node *pre = NULL;
-  Node *next = NULL;
-  while (head != NULL)
+  Node *pre = nullptr;
+  Node *next = nullptr;
+  while (head != nullptr)
   {
     next = head->next;
     head->next = pre;
@@ -40,9 +40,9 @@ Node* reverseLinkedList(Node* head) {
 
 DoubleNode* reverseDoubleList(DoubleNode* head)
 {
-  DoubleNode *pre = NULL;
-  DoubleNode *next = NULL;
-  while (head != NULL) {
+  DoubleNode *pre = nullptr;
+  DoubleNode *next = nullptr;
+  while (head != nullptr) {
     next = head->next;
     head->next = pre;
     head->pre = next;

@@ -29,7 +29,7 @@ class IsBST
 
     static void in(Node* head, vector<Node*>& arr)
     {
-      if (head == NULL)
+      if (head == nullptr)
       {
         return;
       }
@@ -41,7 +41,7 @@ class IsBST
     //Recursive验证是否是二叉查找树
     static bool isBST1(Node* head)
     {
-      if (head == NULL)
+      if (head == nullptr)
       {
         return true;
       }
@@ -75,7 +75,7 @@ class IsBST
 
     static Info process(Node* x)
     {
-      if (x == NULL)
+      if (x == nullptr)
       {
         return Info(true, INT32_MIN, INT32_MAX);
       }
@@ -112,7 +112,7 @@ class IsBST
 
     static bool isBST2(Node* head)
     {
-      if (head == NULL)
+      if (head == nullptr)
       {
         return true;
       }
@@ -139,7 +139,7 @@ class IsBST
     {
       if (level > maxLevel || getRandom(0, MAX_SEED) < HALF_SEED)
       {
-        return NULL;
+        return nullptr;
       }
       Node* head = new Node(getRandom(0, maxValue));
       head->left = generate(level + 1, maxLevel, maxValue);

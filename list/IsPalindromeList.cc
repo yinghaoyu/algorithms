@@ -39,12 +39,12 @@ class IsPalindromeList
     {
       vector<Node*> stack;
       Node* cur = head;
-      while (cur != NULL)  // 全部元素进栈，额外空间O(n)
+      while (cur != nullptr)  // 全部元素进栈，额外空间O(n)
       {
         stack.push_back(cur);
         cur = cur->next;
       }
-      while (head != NULL)  // 逆序比较
+      while (head != nullptr)  // 逆序比较
       {
         Node* tmp = stack.back();
         stack.pop_back();
@@ -60,19 +60,19 @@ class IsPalindromeList
     // need n/2 extra space
     static bool isPalindrome2(Node* head)
     {
-      if (head == NULL || head->next == NULL)
+      if (head == nullptr || head->next == nullptr)
       {
         return true;
       }
       Node* right = head->next;
       Node* cur = head;
-      while (cur->next != NULL && cur->next->next != NULL)  // 快慢指针
+      while (cur->next != nullptr && cur->next->next != nullptr)  // 快慢指针
       {
         right = right->next;
         cur = cur->next->next;
       }
       vector<Node*> stack;
-      while (right != NULL)  // 后半部分进栈
+      while (right != nullptr)  // 后半部分进栈
       {
         stack.push_back(right);
         right = right->next;
@@ -93,14 +93,14 @@ class IsPalindromeList
     // need O(1) extra space
     static bool isPalindrome3(Node* head)
     {
-      if (head == NULL || head->next == NULL)
+      if (head == nullptr || head->next == nullptr)
       {
         return true;
       }
 
       Node* n1 = head;
       Node* n2 = head;
-      while (n2->next != NULL && n2->next->next != NULL)
+      while (n2->next != nullptr && n2->next->next != nullptr)
       {
         // find mid node
         n1 = n1->next; // n1 -> mid
@@ -108,9 +108,9 @@ class IsPalindromeList
       }
       // n1 中点 1 2 3 2 1被分为1 --> 2 --> 3和3 <-- 2 <-- 1
       n2 = n1->next; // n2 -> right part first node
-      n1->next = NULL; // mid.next -> NULL 左右链表截断
-      Node* n3 = NULL;
-      while (n2 != NULL)
+      n1->next = nullptr; // mid.next -> nullptr 左右链表截断
+      Node* n3 = nullptr;
+      while (n2 != nullptr)
       {
         // right part convert
         n3 = n2->next; // n3 -> save next node
@@ -121,7 +121,7 @@ class IsPalindromeList
       n3 = n1; // n3 -> save last node
       n2 = head;// n2 -> left first node
       bool res = true;
-      while (n1 != NULL && n2 != NULL)
+      while (n1 != nullptr && n2 != nullptr)
       {
         // check palindrome
         if (n1->value != n2->value)
@@ -134,8 +134,8 @@ class IsPalindromeList
       }
       // recover
       n1 = n3->next;
-      n3->next = NULL;  // last node point to NULL
-      while (n1 != NULL)
+      n3->next = nullptr;  // last node point to nullptr
+      while (n1 != nullptr)
       {
         // recover list
         n2 = n1->next;
@@ -149,7 +149,7 @@ class IsPalindromeList
     static void printLinkedList(Node* node)
     {
       cout << "Linked List: ";
-      while (node != NULL)
+      while (node != nullptr)
       {
         cout << node->value << " ";
         node = node->next;
@@ -160,7 +160,7 @@ class IsPalindromeList
 
 int main()
 {
-  IsPalindromeList::Node* head = NULL;
+  IsPalindromeList::Node* head = nullptr;
   IsPalindromeList::IsPalindromeList::printLinkedList(head);
   cout << IsPalindromeList::isPalindrome1(head) << " | ";
   cout << IsPalindromeList::isPalindrome2(head) << " | ";

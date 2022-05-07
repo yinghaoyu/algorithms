@@ -89,7 +89,7 @@ void radixSort(int arr[], int L, int R, int digit)
 // only for no-negative value
 void radixSort(int arr[], int len)
 {
-  if (arr == NULL || len < 2)
+  if (arr == nullptr || len < 2)
   {
     return;
   }
