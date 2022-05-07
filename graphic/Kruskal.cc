@@ -6,7 +6,11 @@
 #include <unordered_map>
 #include <unordered_set>
 
-// 克鲁斯卡尔最小生成树，算法思想：选权值最小的边加入并查集
+// 克鲁斯卡尔最小生成树
+// 算法思想：使用并查集
+//（1）总是从权值最小的边开始找，依次找权值依次变大的边（权值相等任选其一）
+//（2）如果当前的边进入最小生成树的集合中不会形成环，就要当前边；否则舍弃
+//（3）找完所有边之后，最小生成树的集合也就得到了
 
 using namespace std;
 
@@ -149,7 +153,7 @@ unordered_set<Edge*> kruskalMST(Graph graph)
     // M 条边
     Edge* edge = priorityQueue.top(); // O(logM)
     priorityQueue.pop();
-    if (!unionFind.isSameSet(edge->from, edge->to))
+    if (!unionFind.isSameSet(edge->from, edge->to))  // 不会形成环
     {
       // O(1)
       result.emplace(edge);
