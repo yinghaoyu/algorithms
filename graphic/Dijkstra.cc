@@ -210,6 +210,7 @@ public:
 
 // 改进后的dijkstra算法
 // 从head出发，所有head能到达的节点，生成到达每个节点的最小路径记录并返回
+// 将从Map中找出到未锁定目标点距离最短的点的时间复杂度从O(N)调整到O(logN)水平
 unordered_map<Node*, int> dijkstra2(Node* head, int size)
 {
   NodeHeap nodeHeap(size);
