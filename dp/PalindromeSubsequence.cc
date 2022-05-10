@@ -26,6 +26,27 @@ using namespace std;
 class PalindromeSubsequence
 {
   public:
+
+    static int** mallocArray(int row, int column)
+    {
+      int** arr = (int**)malloc(sizeof(int*) * row);
+      for(int i = 0; i < row; i++)
+      {
+        arr[i] = (int*)malloc(sizeof(int) * column);
+        memset(arr[i], 0, sizeof(int) * column);
+      }
+      return arr;
+    }
+
+    static void freeArray(int** arr, int row)
+    {
+      for(int i = 0; i < row; i++)
+      {
+        free(arr[i]);
+      }
+      free(arr);
+    }
+
     static int lpsl1(string s)
     {
       if (s.length() == 0)
@@ -63,12 +84,7 @@ class PalindromeSubsequence
       }
       const char* str = s.c_str();
       int N = strlen(str);
-      int** dp = (int**)malloc(sizeof(int*) * N);
-      for(int i = 0; i < N; i++)
-      {
-        dp[i] = (int*)malloc(sizeof(int) * N);
-        memset(dp[i], 0, sizeof(int) * N);
-      }
+      int** dp = mallocArray(N, N);
       dp[N - 1][N - 1] = 1;
       for (int i = 0; i < N - 1; i++)
       {
@@ -89,7 +105,7 @@ class PalindromeSubsequence
         }
       }
       int ans = dp[0][N - 1];
-      free(dp);
+      freeArray(dp, N);
       return ans;
     }
 
@@ -114,11 +130,12 @@ class PalindromeSubsequence
     static const char* reverse(const char* str)
     {
       int N = strlen(str);
-      char* reverse = new char[N];
-      for (int i = 0; i < N; i++)
+      char* reverse = (char*)malloc(sizeof(char) * (N+1));
+      for (int i = 0, j = N; i < N; i++)
       {
-        reverse[--N] = str[i];
+        reverse[--j] = str[i];
       }
+      reverse[N] = '\0';
       return reverse;
     }
 
@@ -127,12 +144,7 @@ class PalindromeSubsequence
     {
       int N = strlen(str1);
       int M = strlen(str2);
-      int** dp = (int**)malloc(sizeof(int*) * N);
-      for(int i = 0; i < N; i++)
-      {
-        dp[i] = (int*)malloc(sizeof(int) * M);
-        memset(dp[i], 0, sizeof(int) * M);
-      }
+      int** dp = mallocArray(N, M);
       // base case
       // str1[0:i]  str2[0:j] 都只有一个字符，相等就长度为1
       dp[0][0] = str1[0] == str2[0] ? 1 : 0;
@@ -160,6 +172,7 @@ class PalindromeSubsequence
         }
       }
       int ans = dp[N - 1][M -1];
+      freeArray(dp, N);
       return ans;
     }
 
@@ -175,12 +188,7 @@ class PalindromeSubsequence
       }
       const char* str = s.c_str();
       int N = strlen(str);
-      int** dp = (int**)malloc(sizeof(int*) * N);
-      for(int i = 0; i < N; i++)
-      {
-        dp[i] = (int*)malloc(sizeof(int) * N);
-        memset(dp[i], 0, sizeof(int) * N);
-      }
+      int** dp = mallocArray(N, N);
       dp[N - 1][N - 1] = 1;
       for (int i = 0; i < N - 1; i++)
       {
@@ -199,14 +207,17 @@ class PalindromeSubsequence
         }
       }
       int ans = dp[0][N-1];  // 整个子串的最长回文子序列
-      free(dp);
+      freeArray(dp, N);
       return ans;
     }
 };
 
 int main()
 {
-  string str = "";
+  string str = "bbbab";
   cout << PalindromeSubsequence::lpsl1(str) << endl;
+  cout << PalindromeSubsequence::lpsl2(str) << endl;
+  cout << PalindromeSubsequence::longestPalindromeSubseq1(str) << endl;
+  cout << PalindromeSubsequence::longestPalindromeSubseq2(str) << endl;
   return 0;
 }
