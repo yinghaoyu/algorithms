@@ -122,6 +122,7 @@ class PalindromeSubsequence
       return reverse;
     }
 
+    // 其中 dp[i][j] 表示 str1[0:i] 和 str2[0:j] 的最长公共子序列的长度
     static int longestCommonSubsequence(const char* str1, const char* str2)
     {
       int N = strlen(str1);
@@ -132,27 +133,34 @@ class PalindromeSubsequence
         dp[i] = (int*)malloc(sizeof(int) * M);
         memset(dp[i], 0, sizeof(int) * M);
       }
+      // base case
+      // str1[0:i]  str2[0:j] 都只有一个字符，相等就长度为1
       dp[0][0] = str1[0] == str2[0] ? 1 : 0;
       for (int i = 1; i < N; i++)
       {
+        // str2[0:j] 只有一个字符
         dp[i][0] = str1[i] == str2[0] ? 1 : dp[i - 1][0];
       }
       for (int j = 1; j < M; j++)
       {
+        // str[0:i] 只有一个字符
         dp[0][j] = str1[0] == str2[j] ? 1 : dp[0][j - 1];
       }
       for (int i = 1; i < N; i++)
       {
         for (int j = 1; j < M; j++)
         {
+          // str1[0:i] 和 str2[0:j] 依赖于 str1[0:i-1] 和 str2[0:j-1]
           dp[i][j] = std::max(dp[i - 1][j], dp[i][j - 1]);
+          // 如果新加入的字符相等，则在原来的dp[i-1][j-1]基础上加上+1
           if (str1[i] == str2[j])
           {
             dp[i][j] = std::max(dp[i][j], dp[i - 1][j - 1] + 1);
           }
         }
       }
-      return dp[N - 1][M - 1];
+      int ans = dp[N - 1][M -1];
+      return ans;
     }
 
     static int longestPalindromeSubseq2(string s)
@@ -176,8 +184,8 @@ class PalindromeSubsequence
       dp[N - 1][N - 1] = 1;
       for (int i = 0; i < N - 1; i++)
       {
-        dp[i][i] = 1;
-        dp[i][i + 1] = str[i] == str[i + 1] ? 2 : 1;
+        dp[i][i] = 1;  // 只有一个字符
+        dp[i][i + 1] = str[i] == str[i + 1] ? 2 : 1;  // 两个字符相等就有2种回文子序列
       }
       for (int i = N - 3; i >= 0; i--)
       {
@@ -190,7 +198,9 @@ class PalindromeSubsequence
           }
         }
       }
-      return dp[0][N - 1];
+      int ans = dp[0][N-1];  // 整个子串的最长回文子序列
+      free(dp);
+      return ans;
     }
 };
 
