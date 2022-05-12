@@ -125,15 +125,28 @@ class CoinsWaySameValueSamePapper
       {
         for (int rest = 0; rest <= aim; rest++)
         {
-          dp[index][rest] = dp[index + 1][rest];
-          // 不计数量
+          dp[index][rest] = dp[index + 1][rest];  // 当前index不使用
+          // 当前index不计数量的使用，斜率优化
           if (rest - coins[index] >= 0)
           {
             dp[index][rest] += dp[index][rest - coins[index]];
           }
-          // 减去多计算的方案
+          // 减去数量超出zhangs[index]的方案
           if (rest - coins[index] * (zhangs[index] + 1) >= 0)
           {
+            // 仔细想一想这里为什么减去 index + 1 而不是 index ？
+            // 从←看，不计数量使用：
+            // index+1行 |    d     |   c   |  b  | a
+            // index行   | a+b+c+d  | a+b+c | a+b | a
+            // 从←看，记数量使用，减去index项：
+            // index+1行 |             d          |      c      |  b  | a
+            // index行   | a+b+c+d - (a) - (a + b)| a+b+c - (a) | a+b | a
+            // 会发现减了n次a，(n-1)次b，(n-2)次c，...
+            // 从←看，记数量使用，减去index+1项：
+            // index+1行 |         d          |      c      |  b  | a
+            // index行   | a+b+c+d - (a) - (b)| a+b+c - (a) | a+b | a
+            // 会发现减了1次a，1次b，1次c，...
+            // 并且可以发现减法是从左边一步步累减过来的
             dp[index][rest] -= dp[index + 1][rest - coins[index] * (zhangs[index] + 1)];
           }
         }
