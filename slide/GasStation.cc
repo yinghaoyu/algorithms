@@ -85,6 +85,7 @@ class GasStation
       // 这个区间刚好表示原数组环形一圈的轨迹
       // offset为arr[i-1]
       // 这里判断每一项前缀和是否都>=0，单调栈里如果最小值都满足，那么整个区间都满足了
+      // 这里将时间复杂度降到log(N)
       if (arr[w.front()] - offset >= 0)
       {
         ans[i] = true;
