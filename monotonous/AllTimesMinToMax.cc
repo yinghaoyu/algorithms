@@ -52,7 +52,7 @@ class AllTimesMinToMax
       {
         // arr[j]左边最近小值的下标是栈顶第2个元素 leftLessIndex
         // arr[j]右边最近小值是i
-        // 在[leftLessIndex, i-1]之间的数都是大于arr[j]的数
+        // 在[leftLessIndex + 1, i-1]之间的数都是大于arr[j]的数
         int j = stack.back();
         stack.pop_back();
         max = std::max(max, (stack.empty() ? sums[i - 1] : (sums[i - 1] - sums[stack.back()])) * arr[j]);
