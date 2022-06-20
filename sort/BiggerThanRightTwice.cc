@@ -113,46 +113,6 @@ class BiggerThanRightTwice
   }
 
   // for test
-  static int *copyArray(int *arr, int len)
-  {
-    if (arr == nullptr)
-    {
-      return nullptr;
-    }
-    int *res = new int[len];
-    for (int i = 0; i < len; i++)
-    {
-      res[i] = arr[i];
-    }
-    return res;
-  }
-
-  // for test
-  static bool isEqual(int arr1[], int arr2[], int len1, int len2)
-  {
-    if ((arr1 == nullptr && arr2 != nullptr) || (arr1 != nullptr && arr2 == nullptr))
-    {
-      return false;
-    }
-    if (arr1 == nullptr && arr2 == nullptr)
-    {
-      return true;
-    }
-    if (len1 != len2)
-    {
-      return false;
-    }
-    for (int i = 0; i < len1; i++)
-    {
-      if (arr1[i] != arr2[i])
-      {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  // for test
   static void printArray(vector<int> &arr)
   {
     if (arr.size() == 0)
