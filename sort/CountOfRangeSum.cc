@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <iostream>
 #include <random>
+#include <vector>
 
 using namespace std;
 
@@ -26,24 +27,23 @@ using namespace std;
 class CountOfRangeSum
 {
  public:
-  static int countRangeSum(int nums[], int len, int lower, int upper)
+  static int countRangeSum(vector<int> &nums, int lower, int upper)
   {
-    if (nums == nullptr || len == 0)
+    if (nums.size() == 0)
     {
       return 0;
     }
-    long *sum = (long *) malloc(len * sizeof(long));
+    vector<long> sum(nums.size());
     sum[0] = nums[0];
-    for (int i = 1; i < len; i++)
+    for (int i = 1; i < nums.size(); i++)
     {
       sum[i] = sum[i - 1] + nums[i];  // 前缀和
     }
-    int ans = process(sum, 0, len - 1, lower, upper);
-    free(sum);
+    int ans = process(sum, 0, nums.size() - 1, lower, upper);
     return ans;
   }
 
-  static int process(long sum[], int L, int R, int lower, int upper)
+  static int process(vector<long> sum, int L, int R, int lower, int upper)
   {
     if (L == R)
     {
@@ -55,7 +55,7 @@ class CountOfRangeSum
     return process(sum, L, M, lower, upper) + process(sum, M + 1, R, lower, upper) + merge(sum, L, M, R, lower, upper);
   }
 
-  static int merge(long arr[], int L, int M, int R, int lower, int upper)
+  static int merge(vector<long> arr, int L, int M, int R, int lower, int upper)
   {
     int ans = 0;
     // 左组寻找的左侧位置（肯定是从当前的L位置开始）
@@ -85,7 +85,7 @@ class CountOfRangeSum
     }
 
     int len = R - L + 1;
-    long *help = (long *) malloc(len * sizeof(long));
+    vector<long> help(len);
     int i = 0;
     int p1 = L;
     int p2 = M + 1;
@@ -105,7 +105,6 @@ class CountOfRangeSum
     {
       arr[L + i] = help[i];
     }
-    free(help);
     return ans;
   }
 };
