@@ -1,8 +1,11 @@
-#include <iostream>
 #include <stdbool.h>
+#include <iostream>
 
 // 堆排序时间复杂度N*log(N)
-// 稳定性：不稳定，比如3 27 36 27如果堆顶3先输出，则最后一个27先到堆顶
+// 稳定性：不稳定，比如3 27 36 27如果堆顶3先输出，则最后一个27先被交换到堆顶
+//
+// 向上建堆和向下建堆的差异
+// https://blog.csdn.net/weixin_61061381/article/details/125030743
 
 #define limit 1000
 
@@ -46,7 +49,7 @@ void heapInsert(int arr[], int index)
 void heapify(int arr[], int index, int heapSize)
 {
   int left = index * 2 + 1;  // 左孩子的下标
-  while (left < heapSize)  // 下方还有孩子的时候
+  while (left < heapSize)    // 下方还有孩子的时候
   {
     // 如果有左孩子，有没有右孩子，可能有可能没有！
     // 两个孩子中，谁的值大，把下标给largest
@@ -88,16 +91,20 @@ int pop()
 }
 
 // 堆排序额外空间复杂度O(1)
-void heapSort(int arr[], int len) {
+void heapSort(int arr[], int len)
+{
   if (arr == nullptr || len < 2)
   {
     return;
   }
-  // O(N*logN)
+  // 自顶向下的建堆方式O(N*logN)
   //    for (int i = 0; i < arr.length; i++) { // O(N)
   //      heapInsert(arr, i); // O(logN)
   //    }
-  // O(N)
+  // 自底向上的建堆方式，即Floyd算法，时间复杂度O(N)
+  // 前提条件：根结点的左右子树均为小堆或大堆才可
+  // 而这里，数组为乱序的，无法直接从根结点开始向下调整
+  // 所以一般从倒数第一个非叶结点开始向下调整，从下往上调
   for (int i = len - 1; i >= 0; i--)
   {
     heapify(arr, i, len);
@@ -105,10 +112,9 @@ void heapSort(int arr[], int len) {
   int heapSize = len;
   swap(arr, 0, --heapSize);
   // O(N*logN)
-  while (heapSize > 0)
+  while (heapSize > 0)  // O(N)
   {
-    // O(N)
-    heapify(arr, 0, heapSize); // O(logN)
-    swap(arr, 0, --heapSize); // O(1)
+    heapify(arr, 0, heapSize);  // O(logN)
+    swap(arr, 0, --heapSize);   // O(1)
   }
 }
