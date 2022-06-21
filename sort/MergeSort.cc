@@ -1,13 +1,12 @@
 #include <iostream>
+#include <vector>
 
-#define SIZE 1000
+using namespace std;
 
-int arr[SIZE];
-
-void merge(int arr[], int L, int M, int R)
+void merge(vector<int> &arr, int L, int M, int R)
 {
   int len = R - L + 1;
-  int *help= new int[len];
+  vector<int> help(len);
   int i = 0;
   int p1 = L;
   int p2 = M + 1;
@@ -34,10 +33,10 @@ void merge(int arr[], int L, int M, int R)
 // l...r N
 // T(N) = 2 * T(N / 2) + O(N)
 // O(N * logN)
-void process(int arr[], int L, int R)
+void process(vector<int> &arr, int L, int R)
 {
   if (L == R)
-  { // base case
+  {  // base case
     return;
   }
   int mid = L + ((R - L) >> 1);
@@ -47,36 +46,39 @@ void process(int arr[], int L, int R)
 }
 
 // 递归方法实现
-void mergeSort1(int arr[])
+void mergeSort1(vector<int> &arr)
 {
-  if (arr == nullptr || SIZE < 2)
+  if (arr.size() < 2)
   {
     return;
   }
-  process(arr, 0, SIZE - 1);
+  process(arr, 0, arr.size() - 1);
 }
 
 // 非递归方法实现
-void mergeSort2(int arr[]) {
-  if (arr == nullptr || SIZE < 2)
+void mergeSort2(vector<int> &arr)
+{
+  if (arr.size() < 2)
   {
     return;
   }
-  int N = SIZE;
-  // 步长
+  int N = arr.size();
+  // 每个分组的长度
   int mergeSize = 1;
-  while (mergeSize < N)
-  { // log N
+  while (mergeSize < N)  // O(logN)
+  {
     // 当前左组的，第一个位置
     int L = 0;
-    while (L < N)
+    while (L < N)  // 从左到右，分组两两归并，O(N)
     {
+      // 只剩左分组，且该分组长度 <= mergeSize
+      // 一个分组不需要归并操作
       if (mergeSize >= N - L)
       {
         break;
       }
       int M = L + mergeSize - 1;
-      int R = M + std::min(mergeSize, N - M - 1);
+      int R = M + std::min(mergeSize, N - M - 1);  // 右组的右边界取较小值
       merge(arr, L, M, R);
       L = R + 1;
     }
