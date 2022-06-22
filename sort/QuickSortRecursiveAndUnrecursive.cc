@@ -1,35 +1,35 @@
 #include <stdbool.h>
-#include <vector>
-#include <random>
 #include <iostream>
+#include <random>
+#include <vector>
 
 using namespace std;
 
 // 返回[min, max]
 int getRandom(int min, int max)
 {
-  random_device seed;  // 硬件生成随机数种子
-  ranlux48 engine(seed());  // 利用种子生成随机数引
+  random_device seed;                            // 硬件生成随机数种子
+  ranlux48 engine(seed());                       // 利用种子生成随机数引
   uniform_int_distribution<> distrib(min, max);  // 设置随机数范围，并为均匀分布
-  int res = distrib(engine);  // 随机数
+  int res = distrib(engine);                     // 随机数
   return res;
 }
 
 // for test
-void printArray(int arr[], int len)
+void printArray(vector<int> &arr)
 {
-  if (arr == nullptr)
+  if (arr.size() == 0)
   {
     return;
   }
-  for (int i = 0; i < len; i++)
+  for (int i = 0; i < arr.size(); i++)
   {
     cout << arr[i] << " ";
   }
   cout << endl;
 }
 
-void swap(int arr[], int i, int j)
+void swap(vector<int> &arr, int i, int j)
 {
   int tmp = arr[i];
   arr[i] = arr[j];
@@ -37,10 +37,10 @@ void swap(int arr[], int i, int j)
 }
 
 // for test
-int* generateRandomArray(int maxSize, int maxValue, int* len)
+vector<int> generateRandomArray(int maxSize, int maxValue, int *len)
 {
   *len = getRandom(1, maxSize);
-  int* arr = new int[*len];
+  vector<int> arr(*len);
   for (int i = 0; i < *len; i++)
   {
     arr[i] = getRandom(1, maxValue + 1) - getRandom(0, maxValue);
@@ -49,35 +49,13 @@ int* generateRandomArray(int maxSize, int maxValue, int* len)
 }
 
 // for test
-int* copyArray(int arr[], int len)
+bool isEqual(vector<int> &arr1, vector<int> &arr2)
 {
-  if (arr == nullptr)
-  {
-    return nullptr;
-  }
-  int* res = new int[len];
-  for (int i = 0; i < len; i++)
-  {
-    res[i] = arr[i];
-  }
-  return res;
-}
-
-// for test
-bool isEqual(int arr1[], int arr2[], int len1, int len2)
-{
-  if ((arr1 == nullptr && arr2 != nullptr) || (arr1 != nullptr && arr2 == nullptr))
+  if (arr1.size() != arr2.size())
   {
     return false;
   }
-  if (arr1 == nullptr && arr2 == nullptr) {
-    return true;
-  }
-  if (len1 != len2)
-  {
-    return false;
-  }
-  for (int i = 0; i < len1; i++)
+  for (int i = 0; i < arr1.size(); i++)
   {
     if (arr1[i] != arr2[i])
     {
@@ -87,11 +65,10 @@ bool isEqual(int arr1[], int arr2[], int len1, int len2)
   return true;
 }
 
-/***************** Way 1 ***********************/
 // arr[L..R]上，以arr[R]位置的数做划分值
 // <= X > X
 // <= X X
-int partition(int arr[], int L, int R)
+int partition(vector<int> &arr, int L, int R)
 {
   if (L > R)
   {
@@ -115,7 +92,7 @@ int partition(int arr[], int L, int R)
   return lessEqual;
 }
 
-void process1(int arr[], int L, int R)
+void process1(vector<int> &arr, int L, int R)
 {
   if (L >= R)
   {
@@ -128,31 +105,30 @@ void process1(int arr[], int L, int R)
 }
 
 // 快排递归版本
-void quickSort1(int arr[], int len)
+void quickSort1(vector<int> &arr)
 {
-  if (arr == nullptr || len < 2)
+  if (arr.size() < 2)
   {
     return;
   }
-  process1(arr, 0, len - 1);
+  process1(arr, 0, arr.size() - 1);
 }
 
-/***************** Way 2 ***********************/
 // arr[L...R] 玩荷兰国旗问题的划分，以arr[R]做划分值
 // <arr[R] ==arr[R] > arr[R]
-int* netherlandsFlag(int arr[], int L, int R)
+vector<int> netherlandsFlag(vector<int> &arr, int L, int R)
 {
   if (L > R)
   {
     // L...R L>R
-    return new int[2] { -1, -1 };
+    return vector<int>{-1, -1};
   }
   if (L == R)
   {
-    return new int[2] { L, R };
+    return vector<int>{L, R};
   }
-  int less = L - 1; // < 区 右边界
-  int more = R; // > 区 左边界
+  int less = L - 1;  // < 区 右边界
+  int more = R;      // > 区 左边界
   int index = L;
   while (index < more)
   {
@@ -174,10 +150,10 @@ int* netherlandsFlag(int arr[], int L, int R)
       swap(arr, index, --more);
     }
   }
-  swap(arr, more, R); // <[R]   =[R]   >[R]
-  return new int[2] { less + 1, more };
+  swap(arr, more, R);  // <[R]   =[R]   >[R]
+  return vector<int>{less + 1, more};
 }
-void process2(int arr[], int L, int R)
+void process2(vector<int> &arr, int L, int R)
 {
   if (L >= R)
   {
@@ -185,53 +161,53 @@ void process2(int arr[], int L, int R)
   }
   int num = getRandom(0, R - L);  // 随机抽取哨兵
   swap(arr, L + num, R);
-  int* equalArea = netherlandsFlag(arr, L, R);
+  vector<int> equalArea = netherlandsFlag(arr, L, R);
   process2(arr, L, equalArea[0] - 1);
   process2(arr, equalArea[1] + 1, R);
 }
 
-void quickSort2(int arr[], int len)
+void quickSort2(vector<int> &arr)
 {
-    if (arr == nullptr || len < 2)
-    {
-      return;
-    }
-    process2(arr, 0, len - 1);
+  if (arr.size() < 2)
+  {
+    return;
   }
+  process2(arr, 0, arr.size() - 1);
+}
 
-/***************** Way 3 ***********************/
 // 快排非递归版本需要的辅助类
 // 要处理的是什么范围上的排序
 class Op
 {
-  public:
-    int l;
-    int r;
+ public:
+  int l;
+  int r;
 
-    Op(int left, int right)
-    {
-      l = left;
-      r = right;
-    }
+  Op(int left, int right)
+  {
+    l = left;
+    r = right;
+  }
 };
+
 // 快排3.0 非递归版本
-void quickSort3(int arr[], int len)
+void quickSort3(vector<int> &arr)
 {
-  if (arr == nullptr || len < 2)
+  if (arr.size() < 2)
   {
     return;
   }
-  int N = len;
+  int N = arr.size();
   swap(arr, getRandom(0, N - 1), N - 1);  // 随机抽取一个哨兵
-  int* equalArea = netherlandsFlag(arr, 0, N - 1);
+  vector<int> equalArea = netherlandsFlag(arr, 0, N - 1);
   int el = equalArea[0];
   int er = equalArea[1];
   vector<Op> stack;
-  stack.emplace_back(Op(0, el - 1));  // 把左区间入栈
+  stack.emplace_back(Op(0, el - 1));      // 把左区间入栈
   stack.emplace_back(Op(er + 1, N - 1));  // 把右区间入栈
   while (!stack.empty())
   {
-    Op op = stack.back(); // 取出一个区间op.l  ... op.r
+    Op op = stack.back();  // 取出一个区间op.l  ... op.r
     stack.pop_back();
     if (op.l < op.r)
     {
@@ -256,19 +232,19 @@ int main()
   cout << "test begin" << endl;
   for (int i = 0; i < testTime; i++)
   {
-    int* arr1 = generateRandomArray(maxSize, maxValue, &len);
-    int* arr2 = copyArray(arr1, len);
-    int* arr3 = copyArray(arr1, len);
-    quickSort1(arr1, len);
-    quickSort2(arr2, len);
-    quickSort3(arr3, len);
-    if (!isEqual(arr1, arr2, len, len) || !isEqual(arr2, arr3, len, len))
+    vector<int> arr1 = generateRandomArray(maxSize, maxValue, &len);
+    vector<int> arr2 = arr1;
+    vector<int> arr3 = arr1;
+    quickSort1(arr1);
+    quickSort2(arr2);
+    quickSort3(arr3);
+    if (!isEqual(arr1, arr2) || !isEqual(arr2, arr3))
     {
       succeed = false;
       break;
     }
   }
-  cout << "test end" <<endl;
+  cout << "test end" << endl;
   cout << "测试" << testTime << "组是否全部通过：" << (succeed ? "是" : "否") << endl;
   return 0;
 }
