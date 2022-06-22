@@ -1,7 +1,7 @@
-#include <cstdint>
-#include <iostream>
 #include <math.h>
 #include <memory.h>
+#include <cstdint>
+#include <iostream>
 
 using namespace std;
 // 基数排序
@@ -49,7 +49,7 @@ void radixSort(int arr[], int L, int R, int digit)
   const int radix = 10;
   int i = 0, j = 0;
   // 有多少个数准备多少个辅助空间
-  int* help = (int*) malloc((R - L + 1) * sizeof(int));
+  int *help = (int *) malloc((R - L + 1) * sizeof(int));
   for (int d = 1; d <= digit; d++)
   {
     // 有多少位就进出几次
@@ -58,7 +58,7 @@ void radixSort(int arr[], int L, int R, int digit)
     // count[1] 当前位(d位)是(0和1)的数字有多少个
     // count[2] 当前位(d位)是(0、1和2)的数字有多少个
     // count[i] 当前位(d位)是(0~i)的数字有多少个
-    int* count = (int*)malloc(radix * sizeof(int)); // count[0..9]
+    int *count = (int *) malloc(radix * sizeof(int));  // count[0..9]
     memset(count, 0, radix * sizeof(int));
     for (i = L; i <= R; i++)
     {
@@ -98,7 +98,7 @@ void radixSort(int arr[], int len)
 
 void printArr(int arr[], int len)
 {
-  for(int i = 0; i < len; i++)
+  for (int i = 0; i < len; i++)
   {
     cout << arr[i] << " ";
   }
