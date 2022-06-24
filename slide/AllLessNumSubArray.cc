@@ -1,6 +1,7 @@
 #include <deque>
 #include <iostream>
 #include <random>
+#include <vector>
 
 using namespace std;
 
@@ -11,13 +12,13 @@ class AllLessNumSubArray
 {
  public:
   // 暴力的对数器方法
-  static int right(int *arr, int len, int sum)
+  static int right(vector<int> &arr, int sum)
   {
-    if (arr == nullptr || len == 0 || sum < 0)
+    if (arr.size() == 0 || sum < 0)
     {
       return 0;
     }
-    int N = len;
+    int N = arr.size();
     int count = 0;
     for (int L = 0; L < N; L++)
     {
@@ -39,13 +40,13 @@ class AllLessNumSubArray
     return count;
   }
 
-  static int num(int *arr, int len, int sum)
+  static int num(vector<int> &arr, int sum)
   {
-    if (arr == nullptr || len == 0 || sum < 0)
+    if (arr.size() == 0 || sum < 0)
     {
       return 0;
     }
-    int N = len;
+    int N = arr.size();
     int count = 0;
     deque<int> maxWindow;
     deque<int> minWindow;
@@ -96,10 +97,10 @@ class AllLessNumSubArray
   }
 
   // for test
-  static int *generateRandomArray(int maxLen, int maxValue, int *len)
+  static vector<int> generateRandomArray(int maxLen, int maxValue, int *len)
   {
     *len = getRandom(0, maxLen);
-    int *arr = new int[*len];
+    vector<int> arr(*len);
     for (int i = 0; i < *len; i++)
     {
       arr[i] = getRandom(0, maxValue);
@@ -108,11 +109,11 @@ class AllLessNumSubArray
   }
 
   // for test
-  static void printArray(int *arr, int len)
+  static void printArray(vector<int> &arr)
   {
-    if (arr != nullptr)
+    if (arr.size() != 0)
     {
-      for (int i = 0; i < len; i++)
+      for (int i = 0; i < arr.size(); i++)
       {
         cout << arr[i] << " ";
       }
@@ -138,14 +139,14 @@ class AllLessNumSubArray
     cout << "测试开始" << endl;
     for (int i = 0; i < testTime; i++)
     {
-      int *arr = generateRandomArray(maxLen, maxValue, &len);
+      vector<int> arr = generateRandomArray(maxLen, maxValue, &len);
       int sum = getRandom(0, maxValue);
-      int ans1 = right(arr, len, sum);
-      int ans2 = num(arr, len, sum);
+      int ans1 = right(arr, sum);
+      int ans2 = num(arr, sum);
       if (ans1 != ans2)
       {
         cout << "Oops!" << endl;
-        printArray(arr, len);
+        printArray(arr);
         cout << sum << endl;
         cout << ans1 << endl;
         cout << ans2 << endl;
