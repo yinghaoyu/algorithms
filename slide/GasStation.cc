@@ -1,6 +1,8 @@
+#include <assert.h>
 #include <stdbool.h>
 #include <deque>
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
@@ -38,10 +40,11 @@ class GasStation
 {
  public:
   // 这个方法的时间复杂度O(N)，额外空间复杂度O(N)
-  static int canCompleteCircuit(int *gas, int *cost, int len)
+  static int canCompleteCircuit(vector<int> &gas, vector<int> &cost)
   {
-    bool *good = goodArray(gas, cost, len);
-    for (int i = 0; i < len; i++)
+    assert(gas.size() == cost.size());
+    vector<bool> good = goodArray(gas, cost);
+    for (int i = 0; i < gas.size(); i++)
     {
       if (good[i])
       {
@@ -51,11 +54,11 @@ class GasStation
     return -1;
   }
 
-  static bool *goodArray(int *g, int *c, int len)
+  static vector<bool> goodArray(vector<int> &g, vector<int> &c)
   {
-    int N = len;
+    int N = g.size();
     int M = N << 1;  // 为了方便计算下标
-    int *arr = new int[M]();
+    vector<int> arr(M);
     for (int i = 0; i < N; i++)
     {
       // arr[0...N-1]为纯能值数组
@@ -78,7 +81,7 @@ class GasStation
       }
       w.push_back(i);
     }
-    bool *ans = new bool[N]();
+    vector<bool> ans(N);
     for (int offset = 0, i = 0, j = N; j < M; offset = arr[i++], j++)
     {
       // arr[i...j]之间的最小值
