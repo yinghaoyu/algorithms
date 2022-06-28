@@ -6,6 +6,7 @@
 #include <unordered_map>
 
 using namespace std;
+using TdArray = vector<vector<int>>;
 
 // 题目描述：
 // arr是货币数组，其中的值都是正数。再给定一个正数aim。
@@ -16,50 +17,29 @@ using namespace std;
 class MinCoinsOnePaper
 {
  public:
-  static int minCoins(int *arr, int len, int aim) { return process(arr, len, 0, aim); }
+  static int minCoins(vector<int> &arr, int aim) { return process(arr, 0, aim); }
 
   // 计算达到rest最少需要多少张货币
-  static int process(int *arr, int len, int index, int rest)
+  static int process(vector<int> &arr, int index, int rest)
   {
     if (rest < 0)
     {
       return INT32_MAX;
     }
-    if (index == len)
+    if (index == arr.size())
     {
       return rest == 0 ? 0 : INT32_MAX;
     }
     else
     {
-      int p1 = process(arr, len, index + 1, rest);               // 不使用当前
-      int p2 = process(arr, len, index + 1, rest - arr[index]);  // 使用当前
+      int p1 = process(arr, index + 1, rest);               // 不使用当前
+      int p2 = process(arr, index + 1, rest - arr[index]);  // 使用当前
       if (p2 != INT32_MAX)
       {
         p2++;  // 加上当前货币张数1
       }
       return std::min(p1, p2);
     }
-  }
-
-  // for test
-  static int **mallocArray(int row, int column)
-  {
-    int **arr = (int **) malloc(sizeof(int *) * row);
-    for (int i = 0; i < row; i++)
-    {
-      arr[i] = (int *) malloc(sizeof(int) * column);
-      memset(arr[i], 0, sizeof(int) * column);
-    }
-    return arr;
-  }
-
-  static void freeArray(int **arr, int row)
-  {
-    for (int i = 0; i < row; i++)
-    {
-      free(arr[i]);
-    }
-    free(arr);
   }
 
   static int getRandom(int min, int max)
@@ -72,9 +52,9 @@ class MinCoinsOnePaper
   }
 
   // 为了测试
-  static void printArray(int *arr, int len)
+  static void printArray(vector<int> &arr)
   {
-    for (int i = 0; i < len; i++)
+    for (int i = 0; i < arr.size(); i++)
     {
       cout << arr[i] << " ";
     }
@@ -82,14 +62,14 @@ class MinCoinsOnePaper
   }
 
   // dp1时间复杂度为：O(arr长度 * aim)
-  static int dp1(int *arr, int len, int aim)
+  static int dp1(vector<int> &arr, int aim)
   {
     if (aim == 0)
     {
       return 0;
     }
-    int N = len;
-    int **dp = mallocArray(N + 1, aim + 1);
+    int N = arr.size();
+    TdArray dp(N + 1, vector<int>(aim + 1));
     dp[N][0] = 0;  // base case，表示没有可用货币index=N且rest=0时，方案是0张
     for (int j = 1; j <= aim; j++)
     {
@@ -111,31 +91,27 @@ class MinCoinsOnePaper
         dp[index][rest] = std::min(p1, p2);
       }
     }
-    int ans = dp[0][aim];
-    freeArray(dp, N + 1);
-    return ans;
+    return dp[0][aim];
   }
 
   class Info
   {
    public:
-    int *coins;
-    int *zhangs;
-    int len;
+    vector<int> coins;
+    vector<int> zhangs;
 
-    Info(int *c, int *z, int l)
+    Info(vector<int> &c, vector<int> &z)
     {
       coins = c;
       zhangs = z;
-      len = l;
     }
   };
 
   // 统计
-  static Info getInfo(int *arr, int len)
+  static Info getInfo(vector<int> &arr)
   {
     unordered_map<int, int> counts;
-    for (int i = 0; i < len; i++)
+    for (int i = 0; i < arr.size(); i++)
     {
       if (counts.find(arr[i]) == counts.end())
       {
@@ -147,30 +123,30 @@ class MinCoinsOnePaper
       }
     }
     int N = counts.size();
-    int *coins = new int[N]();
-    int *zhangs = new int[N]();
+    vector<int> coins(N);
+    vector<int> zhangs(N);
     int index = 0;
     for (auto entry : counts)
     {
       coins[index] = entry.first;
       zhangs[index++] = entry.second;
     }
-    return Info(coins, zhangs, index);
+    return Info(coins, zhangs);
   }
 
   // dp2时间复杂度为：O(arr长度) + O(货币种数 * aim * 每种货币的平均张数)
-  static int dp2(int *arr, int len, int aim)
+  static int dp2(vector<int> &arr, int aim)
   {
     if (aim == 0)
     {
       return 0;
     }
     // 得到info时间复杂度O(arr长度)
-    Info info = getInfo(arr, len);
-    int *coins = info.coins;
-    int *zhangs = info.zhangs;
-    int N = info.len;
-    int **dp = mallocArray(N + 1, aim + 1);
+    Info info = getInfo(arr);
+    vector<int> coins = info.coins;
+    vector<int> zhangs = info.zhangs;
+    int N = coins.size();
+    TdArray dp(N + 1, vector<int>(aim + 1));
     dp[N][0] = 0;
     for (int j = 1; j <= aim; j++)
     {
@@ -191,25 +167,23 @@ class MinCoinsOnePaper
         }
       }
     }
-    int ans = dp[0][aim];
-    freeArray(dp, N + 1);
-    return ans;
+    return dp[0][aim];
   }
 
   // dp3时间复杂度为：O(arr长度) + O(货币种数 * aim)
   // 优化需要用到窗口内最小值的更新结构
-  static int dp3(int *arr, int len, int aim)
+  static int dp3(vector<int> &arr, int aim)
   {
     if (aim == 0)
     {
       return 0;
     }
     // 得到info时间复杂度O(arr长度)
-    Info info = getInfo(arr, len);
-    int *c = info.coins;
-    int *z = info.zhangs;
-    int N = info.len;
-    int **dp = mallocArray(N + 1, aim + 1);
+    Info info = getInfo(arr);
+    vector<int> c = info.coins;
+    vector<int> z = info.zhangs;
+    int N = c.size();
+    TdArray dp(N + 1, vector<int>(aim + 1));
     dp[N][0] = 0;
     for (int j = 1; j <= aim; j++)
     {
@@ -246,18 +220,16 @@ class MinCoinsOnePaper
         }
       }
     }
-    int ans = dp[0][aim];
-    freeArray(dp, N + 1);
-    return ans;
+    return dp[0][aim];
   }
 
   // 返回补偿的货币数，计算cur到pre之间所需的货币张数
   static int compensate(int pre, int cur, int coin) { return (cur - pre) / coin; }
 
   // 为了测试
-  static int *randomArray(int N, int maxValue)
+  static vector<int> randomArray(int N, int maxValue)
   {
-    int *arr = new int[N];
+    vector<int> arr(N);
     for (int i = 0; i < N; i++)
     {
       arr[i] = getRandom(1, maxValue);  // 不能为0
@@ -275,16 +247,16 @@ class MinCoinsOnePaper
     for (int i = 0; i < testTime; i++)
     {
       int N = getRandom(0, maxLen);
-      int *arr = randomArray(N, maxValue);
+      vector<int> arr = randomArray(N, maxValue);
       int aim = getRandom(0, maxValue);
-      int ans1 = minCoins(arr, N, aim);
-      int ans2 = dp1(arr, N, aim);
-      int ans3 = dp2(arr, N, aim);
-      int ans4 = dp3(arr, N, aim);
+      int ans1 = minCoins(arr, aim);
+      int ans2 = dp1(arr, aim);
+      int ans3 = dp2(arr, aim);
+      int ans4 = dp3(arr, aim);
       if (ans1 != ans2 || ans3 != ans4 || ans1 != ans3)
       {
         cout << "Oops!" << endl;
-        printArray(arr, N);
+        printArray(arr);
         cout << aim << endl;
         cout << ans1 << endl;
         cout << ans2 << endl;
@@ -297,7 +269,7 @@ class MinCoinsOnePaper
     cout << "==========" << endl;
 
     int aim = 0;
-    int *arr = nullptr;
+    vector<int> arr;
     clock_t start;
     clock_t end;
     double elapsedTime;
@@ -310,12 +282,12 @@ class MinCoinsOnePaper
     aim = 60000;
     arr = randomArray(maxLen, maxValue);
     start = clock();
-    ans2 = dp2(arr, maxLen, aim);
+    ans2 = dp2(arr, aim);
     end = clock();
     elapsedTime = static_cast<double>(end - start) / CLOCKS_PER_SEC;
     cout << "dp2答案 : " << ans2 << ", dp2运行时间 : " << elapsedTime << " ms" << endl;
     start = clock();
-    ans3 = dp3(arr, maxLen, aim);
+    ans3 = dp3(arr, aim);
     end = clock();
     elapsedTime = static_cast<double>(end - start) / CLOCKS_PER_SEC;
     cout << "dp3答案 : " << ans3 << ", dp3运行时间 : " << elapsedTime << " ms" << endl;
@@ -330,7 +302,7 @@ class MinCoinsOnePaper
     maxValue = 10000;
     arr = randomArray(maxLen, maxValue);
     start = clock();
-    ans3 = dp3(arr, maxLen, aim);
+    ans3 = dp3(arr, aim);
     end = clock();
     elapsedTime = static_cast<double>(end - start) / CLOCKS_PER_SEC;
     cout << "dp3运行时间 : " << elapsedTime << " ms" << endl;
