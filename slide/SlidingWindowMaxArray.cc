@@ -1,6 +1,7 @@
-#include <iostream>
 #include <deque>
+#include <iostream>
 #include <random>
+#include <vector>
 
 using namespace std;
 
@@ -21,141 +22,133 @@ using namespace std;
 
 class SlidingWindowMaxArray
 {
-  public:
-    // 暴力的对数器方法
-    static int* right(int* arr, int len, int w)
+ public:
+  // 暴力的对数器方法
+  static vector<int> right(vector<int> &arr, int w)
+  {
+    if (w < 1 || arr.size() < w)
     {
-      if (arr == nullptr || w < 1 || len < w)
-      {
-        return nullptr;
-      }
-      int N = len;
-      // 最终选出N - w + 1个数
-      int* res = new int[N - w + 1](); // ()表示以默认形式构造数组，初值为0
-      int index = 0;
-      int L = 0;
-      int R = w - 1;
-      while (R < N)
-      {
-        int max = arr[L];
-        for (int i = L + 1; i <= R; i++)
-        {
-          max = std::max(max, arr[i]);
-        }
-        res[index++] = max;
-        L++;
-        R++;
-      }
-      return res;
+      return vector<int>();
     }
-
-    static int* getMaxWindow(int* arr, int len, int w)
+    int N = arr.size();
+    // 最终选出N - w + 1个数
+    vector<int> res(N - w + 1);
+    int index = 0;
+    int L = 0;
+    int R = w - 1;
+    while (R < N)
     {
-      if (arr == nullptr || w < 1 || len < w)
+      int max = arr[L];
+      for (int i = L + 1; i <= R; i++)
       {
-        return nullptr;
+        max = std::max(max, arr[i]);
       }
-      // qmax 窗口最大值的更新结构
-      // 放下标
-      deque<int> qmax;
-      int* res = new int[len - w + 1]();
-      int index = 0;
-      for (int R = 0; R < len; R++)
-      {
-        // 窗口保证单调递减
-        while (!qmax.empty() && arr[qmax.back()] <= arr[R])
-        {
-          qmax.pop_back();
-        }
-        qmax.push_back(R);
-        if (qmax.front() == R - w)  // 窗口大于w
-        {
-          qmax.pop_front();
-        }
-        if (R >= w - 1)  // 从 w - 1 之后开始算
-        {
-          res[index++] = arr[qmax.front()];
-        }
-      }
-      return res;
+      res[index++] = max;
+      L++;
+      R++;
     }
+    return res;
+  }
 
-    // for test
-    static int* generateRandomArray(int maxSize, int maxValue, int* len)
+  static vector<int> getMaxWindow(vector<int> &arr, int w)
+  {
+    if (w < 1 || arr.size() < w)
     {
-      *len = getRandom(0, maxSize);
-      int* arr = new int[*len]();
-      for (int i = 0; i < *len; i++)
-      {
-        arr[i] = getRandom(0, maxValue);
-      }
-      return arr;
+      return vector<int>();
     }
-
-    // for test
-    static bool isEqual(int* arr1, int* arr2, int len1, int len2)
+    int N = arr.size();
+    // qmax 窗口最大值的更新结构
+    // 放下标
+    deque<int> qmax;
+    vector<int> res(N - w + 1);
+    int index = 0;
+    for (int R = 0; R < N; R++)
     {
-      if ((arr1 == nullptr && arr2 != nullptr)
-          || (arr1 != nullptr && arr2 == nullptr))
+      // 窗口保证单调递减
+      while (!qmax.empty() && arr[qmax.back()] <= arr[R])
+      {
+        qmax.pop_back();
+      }
+      qmax.push_back(R);
+      if (qmax.front() == R - w)  // 窗口大于w
+      {
+        qmax.pop_front();
+      }
+      if (R >= w - 1)  // 从 w - 1 之后开始算
+      {
+        res[index++] = arr[qmax.front()];
+      }
+    }
+    return res;
+  }
+
+  // for test
+  static vector<int> generateRandomArray(int maxSize, int maxValue, int *len)
+  {
+    *len = getRandom(0, maxSize);
+    vector<int> arr(*len);
+    for (int i = 0; i < *len; i++)
+    {
+      arr[i] = getRandom(0, maxValue);
+    }
+    return arr;
+  }
+
+  // for test
+  static bool isEqual(vector<int> &arr1, vector<int> &arr2)
+  {
+    if (arr1.size() != arr2.size())
+    {
+      return false;
+    }
+    for (int i = 0; i < arr1.size(); i++)
+    {
+      if (arr1[i] != arr2[i])
       {
         return false;
       }
-      if (arr1 == nullptr && arr2 == nullptr)
-      {
-        return true;
-      }
-      if (len1 != len2)
-      {
-        return false;
-      }
-      for (int i = 0; i < len1; i++)
-      {
-        if (arr1[i] != arr2[i])
-        {
-          return false;
-        }
-      }
-      return true;
     }
+    return true;
+  }
 
-    static void printArray(int* arr, int len)
+  static void printArray(vector<int> &arr)
+  {
+    for (int i = 0; i < arr.size(); i++)
     {
-      for(int i = 0; i < len; i++)
-      {
-        cout << arr[i] << " ";
-      }
-      cout << endl;
+      cout << arr[i] << " ";
     }
+    cout << endl;
+  }
 
-    static int getRandom(int min, int max)
-    {
-      random_device seed;  // 硬件生成随机数种子
-      ranlux48 engine(seed());  // 利用种子生成随机数引
-      uniform_int_distribution<> distrib(min, max);  // 设置随机数范围，并为均匀分布
-      int res = distrib(engine);  // 随机数
-      return res;
-    }
+  static int getRandom(int min, int max)
+  {
+    random_device seed;                            // 硬件生成随机数种子
+    ranlux48 engine(seed());                       // 利用种子生成随机数引
+    uniform_int_distribution<> distrib(min, max);  // 设置随机数范围，并为均匀分布
+    int res = distrib(engine);                     // 随机数
+    return res;
+  }
 
-    static void test()
+  static void test()
+  {
+    int testTime = 10000;
+    int maxSize = 100;
+    int maxValue = 100;
+    int len = 0;
+    cout << "test begin" << endl;
+    for (int i = 0; i < testTime; i++)
     {
-      int testTime = 10000;
-      int maxSize = 100;
-      int maxValue = 100;
-      int len = 0;
-      cout << "test begin" << endl;
-      for (int i = 0; i < testTime; i++)
+      vector<int> arr = generateRandomArray(maxSize, maxValue, &len);
+      int w = getRandom(0, len);
+      vector<int> ans1 = getMaxWindow(arr, w);
+      vector<int> ans2 = right(arr, w);
+      if (!isEqual(ans1, ans2))
       {
-        int* arr = generateRandomArray(maxSize, maxValue, &len);
-        int w = getRandom(0, len);
-        int* ans1 = getMaxWindow(arr, len, w);
-        int* ans2 = right(arr, len, w);
-        if (!isEqual(ans1, ans2, len - w + 1, len - w + 1))
-        {
-          cout << "Oops!" << endl;
-        }
+        cout << "Oops!" << endl;
       }
-      cout << "test finish" << endl;
     }
+    cout << "test finish" << endl;
+  }
 };
 
 int main()
