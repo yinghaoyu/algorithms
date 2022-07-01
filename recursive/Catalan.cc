@@ -8,6 +8,10 @@ using namespace std;
 // 卡特兰数组
 // https://zhuanlan.zhihu.com/p/97619085
 
+// 卡特兰数组应用
+// n + 1 个叶子节点能够构成多少种形状不同的满二叉树？
+// 见dp/DifferentBTNum.cc
+
 class Catalan
 {
  public:
