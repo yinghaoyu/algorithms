@@ -132,7 +132,7 @@ class SnacksWays
       int lweight = entry.first;
       int lways = entry.second;
       // 从右边到小于等于该数且离他最近的那个数
-      // upper_bound 找到第一个>=的数
+      // upper_bound 找到第一个>的数
       auto floor = rpre.upper_bound(bag - lweight);
       // floor--后 此时floor 是 <= 最近的数，相当于floorKey
       floor--;
