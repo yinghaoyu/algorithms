@@ -30,7 +30,7 @@ class LargestRectangleInHistogram
     vector<int> stack;
     for (int i = 0; i < len; i++)
     {
-      // 单调递增栈
+      // 单调递减栈
       while (!stack.empty() && height[i] <= height[stack.back()])
       {
         // j 是区间[k + 1, i]的最小值
