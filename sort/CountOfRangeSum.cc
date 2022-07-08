@@ -111,5 +111,7 @@ class CountOfRangeSum
 
 int main()
 {
+  vector<int> arr{1, 2, 3, 4, 1, 1, 2};
+  cout << CountOfRangeSum::countRangeSum(arr, 3, 4) << endl;
   return 0;
 }
