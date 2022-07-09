@@ -18,6 +18,13 @@ using namespace std;
 // 为什么?
 // ① 如果i、j、k都在左边或者右边，显然是符合条件的
 // ② 如果i在左、j在右，也是满足条件的，因为奇数+偶数 != 2 * 任意数
+//
+// Master 公式
+// T(N) = a * T(N / b) + O(N ^ d)
+// 结论：
+// ① 当 logb(a) > d时，时间复杂度O(N ^ logb(a))
+// ② 当 logb(a) = d时，时间复杂度O((N ^ d) * logN)
+// ③ 当 logb(a) < d时，时间复杂度O(N ^ d)
 
 class MakeNo
 {
@@ -36,12 +43,12 @@ class MakeNo
     // 8   :   4
     // [4个奇数] [3个偶]
     int halfSize = (size + 1) / 2;
-    vector<int> base = makeNo(halfSize);
+    vector<int> base = makeNo(halfSize);  // Master公式第一部分T(N / 2)
     // base -> 等长奇数达标来
     // base -> 等长偶数达标来
     vector<int> ans(size);
     int index = 0;
-    for (; index < halfSize; index++)
+    for (; index < halfSize; index++)  // Master公式第二部分O(N)
     {
       ans[index] = base[index] * 2 + 1;
     }
@@ -49,6 +56,8 @@ class MakeNo
     {
       ans[index] = base[i] * 2;
     }
+    // 结合Master公式，T(N) = T(N / 2) + T(N)
+    // a = 1, b = 2, d = 1，符合条件③，因此时间复杂度为O(N)
     return ans;
   }
 
