@@ -11,11 +11,16 @@ using TdArray = vector<vector<bool>>;
 // 子数组的定义：一个或连续多个数组中的元素组成一个子数组(子数组最少包含一个元素)
 // 子序列的定义：去除某些元素但不破坏余下元素的相对位置（在前或在后）而形成的新序列
 
-// 给定一个非负数组arr，和一个正数m。 返回arr的所有子序列中累加和%m之后的最大值。
+// 给定一个非负数组arr，和一个正数m。
+// 返回arr的所有子序列中累加和%m之后的最大值。
+// 1、arr中每个数不大，怎么解决？
+// 2、arr中m的值很小，怎么解决？
+// 3、arr的长度很短，但是arr每个数字比较大且m比较大，怎么解决？
+
 class SubsquenceMaxModM
 {
  public:
-  // 暴力递归
+  // 暴力递归，时间复杂度O(2^N)
   static int max1(vector<int> &arr, int m)
   {
     unordered_set<int> set;
@@ -28,6 +33,7 @@ class SubsquenceMaxModM
     return max;
   }
 
+  // arr[index...]能形成多少个不同的累加和，全部存到set里
   static void process(vector<int> &arr, int index, int sum, unordered_set<int> &set)
   {
     if (index == arr.size())
@@ -41,7 +47,12 @@ class SubsquenceMaxModM
     }
   }
 
-  // 枚举所有可能性
+  // 例如arr = [5, 1, 2]， sum = 8
+  //   0 1 2 3 4 5 6 7 8
+  // 0 T F F F F T F F F
+  // 1 T
+  // 2 T                   --> 填表的顺序为从左往右，从上往下
+  // 所有数累加和不大，即情况1的解法
   static int max2(vector<int> arr, int m)
   {
     int sum = 0;
@@ -52,6 +63,7 @@ class SubsquenceMaxModM
       sum += arr[i];
     }
     TdArray dp(N, vector<bool>(sum + 1));
+    // dp[i][j]的含义为，选中任意个arr[0...i]数字，能不能达到累加和j
     for (int i = 0; i < N; i++)
     {
       // 累加和为0，可能任何情况都能取到
@@ -62,7 +74,7 @@ class SubsquenceMaxModM
     {
       for (int j = 1; j <= sum; j++)
       {
-        dp[i][j] = dp[i - 1][j];  //不取当前arr[i]
+        dp[i][j] = dp[i - 1][j];  // 不取当前arr[i]
         if (j - arr[i] >= 0)
         {
           dp[i][j] = dp[i][j] | dp[i - 1][j - arr[i]];  // 取当前arr[i]
@@ -72,6 +84,7 @@ class SubsquenceMaxModM
     int ans = 0;
     for (int j = 0; j <= sum; j++)
     {
+      // 从arr[0...N-1]选出任意数，达到累加和j
       if (dp[N - 1][j])  // 能取到的情况下，找出最大值
       {
         ans = std::max(ans, j % m);
@@ -81,11 +94,13 @@ class SubsquenceMaxModM
   }
 
   // 缩减数组
+  // m比较小，即情况2解法
   static int max3(vector<int> &arr, int m)
   {
     int N = arr.size();
     // 0...m-1
     TdArray dp(N, vector<bool>(m));
+    // dp[i][j]的含义为，选中任意个arr[0...i]数字，累加和%m后，能不能达到j
     for (int i = 0; i < N; i++)
     {
       dp[i][0] = true;
@@ -111,7 +126,7 @@ class SubsquenceMaxModM
     int ans = 0;
     for (int i = 0; i < m; i++)
     {
-      if (dp[N - 1][i])
+      if (dp[N - 1][i])  // 获取累加和%m的最大值
       {
         ans = i;
       }
@@ -121,7 +136,7 @@ class SubsquenceMaxModM
 
   // 如果arr的累加和很大，m也很大
   // 但是arr的长度相对不大
-  // 分治法
+  // 分治法，即情况3解法
   static int max4(vector<int> &arr, int m)
   {
     if (arr.size() == 1)
@@ -140,7 +155,7 @@ class SubsquenceMaxModM
       auto floor = sortSet2.upper_bound(m - 1 - leftMod);
       // floor--后，floor在最近的 <= 的位置，相当于floorKey
       floor--;
-      ans = std::max(ans, leftMod + *floor);
+      ans = std::max(ans, leftMod + *floor);  // 找ans最接近m-1的数
     }
     return ans;
   }
