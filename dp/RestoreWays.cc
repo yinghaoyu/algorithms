@@ -10,9 +10,9 @@ using TdArray = vector<vector<int>>;
 using TtArray = vector<vector<vector<int>>>;
 
 // 整型数组arr长度为n(3 <= n <= 10^4)，最初每个数字是<=200的正数且满足如下条件：
-// 1. 0位置的要求：arr[0]<=arr[1]▫
+// 1. 0位置的要求：arr[0]<=arr[1]
 // 2. n-1位置的要求：arr[n-1]<=arr[n-2]
-// 3. 中间i位置的要求：arr[i]<=max(arr[i-1],arr[i+1])▫
+// 3. 中间i位置的要求：arr[i]<=max(arr[i-1],arr[i+1])
 // 但是在arr有些数字丢失了，比如k位置的数字之前是正数，丢失之后k位置的数字为0
 // 请你根据上述条件，计算可能有多少种不同的arr可以满足以上条件
 // 比如 [6,0,9] 只有还原成 [6,9,9]满足全部三个条件，所以返回1种，即[6,9,9]达标
@@ -77,23 +77,24 @@ class RestoreWays
     int N = arr.size();
     if (arr[N - 1] != 0)
     {
-      // 2 的含义为arr[N-2] > arr[N-1]
+      // 2 的含义为arr[N-1] > arr[N]
+      // 没丢失，原位置数保持不变
       return process1(arr, N - 1, arr[N - 1], 2);
     }
     else
     {
-      // 最后1个数丢失了
+      // arr[N-1] == 0
       int ways = 0;
       for (int v = 1; v < 201; v++)
       {
-        // 2 的含义为arr[N-2] > arr[N-1]
+        // 2 的含义为arr[N-1] > arr[N]
         ways += process1(arr, N - 1, v, 2);
       }
       return ways;
     }
   }
 
-  // 如果i位置的数字变成了v,
+  // 尝试把i位置的数字变成v,
   // 并且arr[i]和arr[i+1]的关系为s，
   // s==0，代表arr[i] < arr[i+1] 右大
   // s==1，代表arr[i] == arr[i+1] 右=当前
@@ -104,18 +105,24 @@ class RestoreWays
     if (i == 0)
     {
       // 0...i 只剩一个数了，0...0
+      // 首先，必须满足 arr[0] <= arr[1]，才能把v替换到arr[0]
+      // 什么情况能把v替换到arr[0]
+      // arr[0]丢失了，或者v == arr[0]本来就相等的情况
       return ((s == 0 || s == 1) && (arr[0] == 0 || v == arr[0])) ? 1 : 0;
     }
     // i > 0
     if (arr[i] != 0 && v != arr[i])
     {
+      // arr[i没丢失，且v不等于arr[i]，把arr[i]变成v显然不成立
       return 0;
     }
-    // i>0 ，并且， i位置的数真的可以变成V，
+    // i>0 ，并且，i位置的数真的可以变成V，
     int ways = 0;
     if (s == 0 || s == 1)
     {
-      // [i] -> V <= [i+1]
+      // 尝试i-1位置的时候，必须知道i位置和i+1位置的关系s
+      // 根据s知道arr[i] <= arr[i+1]了，那么已经满足条件arr[i] <= max(arr[i-1], arr[i+1])
+      // 这时arr[i-1]可取1...201任意值
       for (int pre = 1; pre < 201; pre++)
       {
         ways += process1(arr, i - 1, pre, pre < v ? 0 : (pre == v ? 1 : 2));
@@ -123,7 +130,8 @@ class RestoreWays
     }
     else
     {
-      // ? 当前 > 右 当前 <= max{左，右}
+      // 根据s知道arr[i] > arr[i+1]了，那么为满足条件arr[i] <= max(arr[i-1], arr[i+1])
+      // 这时arr[i-1]只能取v...201
       for (int pre = v; pre < 201; pre++)
       {
         ways += process1(arr, i - 1, pre, pre == v ? 1 : 2);
