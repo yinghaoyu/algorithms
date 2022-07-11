@@ -1,4 +1,3 @@
-#include <memory.h>
 #include <iostream>
 #include <random>
 #include <vector>
@@ -13,12 +12,12 @@ class AllTimesMinToMax
 {
  public:
   // 暴力解
-  static int max1(int *arr, int len)
+  static int max1(vector<int> &arr)
   {
     int max = INT32_MIN;
-    for (int i = 0; i < len; i++)
+    for (int i = 0; i < arr.size(); i++)
     {
-      for (int j = i; j < len; j++)
+      for (int j = i; j < arr.size(); j++)
       {
         int minNum = INT32_MAX;
         int sum = 0;
@@ -33,10 +32,10 @@ class AllTimesMinToMax
     return max;
   }
 
-  static int max2(int *arr, int len)
+  static int max2(vector<int> &arr)
   {
-    int size = len;
-    int *sums = new int[size]();
+    int size = arr.size();
+    vector<int> sums(size);
     sums[0] = arr[0];
     for (int i = 1; i < size; i++)
     {
@@ -48,6 +47,7 @@ class AllTimesMinToMax
     for (int i = 0; i < size; i++)
     {
       // 单调递增栈
+      // 这里取>= arr[i]，保证arr[j]在区间内一定是唯一最小值
       while (!stack.empty() && arr[stack.back()] >= arr[i])
       {
         // arr[j]左边最近小值的下标是栈顶第2个元素 leftLessIndex
@@ -55,6 +55,7 @@ class AllTimesMinToMax
         // 在[leftLessIndex + 1, i-1]之间的数都是大于arr[j]的数
         int j = stack.back();
         stack.pop_back();
+        // 如果左边边界为空，那么区间和就是sums[i-1]
         max = std::max(max, (stack.empty() ? sums[i - 1] : (sums[i - 1] - sums[stack.back()])) * arr[j]);
       }
       stack.push_back(i);
@@ -63,6 +64,7 @@ class AllTimesMinToMax
     {
       int j = stack.back();
       stack.pop_back();
+      // 右边的边界为空，说明数组右边的值全大于arr[j]
       max = std::max(max, (stack.empty() ? sums[size - 1] : (sums[size - 1] - sums[stack.back()])) * arr[j]);
     }
     return max;
@@ -77,10 +79,10 @@ class AllTimesMinToMax
     return res;
   }
 
-  static int *gerenareRondomArray(int *len)
+  static vector<int> gerenareRondomArray(int *len)
   {
     *len = getRandom(10, 30);
-    int *arr = new int[*len];
+    vector<int> arr(*len);
     for (int i = 0; i < *len; i++)
     {
       arr[i] = getRandom(0, 100);
@@ -95,8 +97,8 @@ class AllTimesMinToMax
     cout << "test begin" << endl;
     for (int i = 0; i < testTimes; i++)
     {
-      int *arr = gerenareRondomArray(&len);
-      if (max1(arr, len) != max2(arr, len))
+      vector<int> arr = gerenareRondomArray(&len);
+      if (max1(arr) != max2(arr))
       {
         cout << "Oops!" << endl;
         break;
