@@ -89,14 +89,19 @@ vector<int> netherlandsFlag(vector<int> &arr, int L, int R)
     }
     else if (arr[index] < arr[R])
     {
-      //        swap(arr, less + 1, index);
-      //        less++;
-      //        index++;
       swap(arr, index++, ++less);
     }
     else
     {
       // >
+      // 注意这里的index没有加1
+      // 1 2 2 3 3 4 5 6 7 2 3 2
+      //       ↑             ↑
+      //     index          more
+
+      // 1 2 2 3 3 4 5 2 6 7 3 2
+      //         ↑     ↑         -->假如index++，那么下一个元素交换时，就会乱序
+      //       index  more
       swap(arr, index, --more);
     }
   }

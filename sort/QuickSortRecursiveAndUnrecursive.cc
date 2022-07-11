@@ -139,9 +139,6 @@ vector<int> netherlandsFlag(vector<int> &arr, int L, int R)
     }
     else if (arr[index] < arr[R])
     {
-      //        swap(arr, less + 1, index);
-      //        less++;
-      //        index++;
       swap(arr, index++, ++less);
     }
     else
