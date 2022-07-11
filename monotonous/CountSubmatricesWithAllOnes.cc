@@ -3,6 +3,8 @@
 
 using namespace std;
 
+using TdArray = vector<vector<int>>;
+
 // 测试链接：https://leetcode.com/problems/count-submatrices-with-all-ones
 // 题目描述：给你一个 m x n 的二进制矩阵 mat ，请你返回有多少个 子矩形 的元素全部都是 1 。
 // 1 0 1
@@ -39,55 +41,58 @@ using namespace std;
 class CountSubmatricesWithAllOnes
 {
  public:
-  static int numSubmat(int **mat, int row, int column)
+  static int numSubmat(TdArray &mat)
   {
-    if (mat == nullptr || row == 0 || column == 0)
+    if (mat.size() == 0 || mat[0].size() == 0)
     {
       return 0;
     }
     int nums = 0;
-    int *height = new int[column]();
-    for (int i = 0; i < row; i++)
+    vector<int> height(mat[0].size());
+    for (int i = 0; i < mat.size(); i++)
     {
-      for (int j = 0; j < column; j++)
+      for (int j = 0; j < mat[0].size(); j++)
       {
         height[j] = mat[i][j] == 0 ? 0 : height[j] + 1;
       }
-      nums += countFromBottom(height, column);
+      nums += countFromBottom(height);
     }
     return nums;
   }
 
-  // 单行的计算的顺序
-  //    _            _            _            _
-  //  _| |         _|♠|         _| |         _| |
-  // | | |_       | | |_       |♠|♠|_       | | |_
-  // | | | | -->  | | | | -->  | | | | -->  |♠|♠|♠|
-  // |_|_|_|      |_|_|_|      |_|_|_|      |♠|♠|♠|
-  //  起始          1      1*[(2*3)>>1]=3  2*[(3*4)>>1]=12  --> nums = 1 + 3 + 12
-  static int countFromBottom(int *height, int len)
+  static int countFromBottom(vector<int> height)
   {
-    if (height == nullptr || len == 0)
+    if (height.size() == 0)
     {
       return 0;
     }
     int nums = 0;
-    int *stack = new int[len]();
+    vector<int> stack(height.size());
     int si = -1;
-    for (int i = 0; i < len; i++)
+    for (int i = 0; i < height.size(); i++)
     {
       // 构建单调递增栈，不符合时弹出结算
       while (si != -1 && height[stack[si]] >= height[i])
       {
         // height[cur] 是区间 [left, i)之间的最小值
         int cur = stack[si--];
-        if (height[cur] > height[i])  // 相等的时候舍弃
+        if (height[cur] > height[i])  // 相等的时候舍弃，不然会重复计算
         {
           int left = si == -1 ? -1 : stack[si];
           // 形成直方图宽度n
           int n = i - left - 1;
           int down = std::max(left == -1 ? 0 : height[left], height[i]);
           // 形成的直方图有效结算高度height[cur] - down
+          // l = left，c = cur
+          // 计算必须以最后一行为底，且一定包含♠的矩阵
+          //      _                _                _                 _
+          //    _|♠|             _|*|             _|*|              _|*|
+          //   |*|*|_           |♠|♠|_           |*|*|_            |*|*|_
+          //  _|*|*|*|         _|*|*|*|         _|♠|♠|♠|          _|*|*|*|
+          // |*|*|*|*|   -->  |*|*|*|*|   -->  |*|*|*|*|    -->  |♠|♠|♠|♠|
+          // |*|*|*|*|        |*|*|*|*|        |*|*|*|*|         |♠|♠|♠|♠|
+          //  ↑   ↑ ↑          ↑ ↑   ↑          ↑     ↑           ↑
+          //  l   c i          l c   i          l     c           c
           nums += (height[cur] - down) * num(n);
         }
       }
@@ -97,7 +102,7 @@ class CountSubmatricesWithAllOnes
     {
       int cur = stack[si--];
       int left = si == -1 ? -1 : stack[si];
-      int n = len - left - 1;
+      int n = height.size() - left - 1;
       int down = left == -1 ? 0 : height[left];
       nums += (height[cur] - down) * num(n);
     }
@@ -106,3 +111,9 @@ class CountSubmatricesWithAllOnes
 
   static int num(int n) { return ((n * (1 + n)) >> 1); }
 };
+
+int main()
+{
+  TdArray sample{{1, 0, 1}, {1, 1, 0}, {1, 1, 0}};
+  cout << CountSubmatricesWithAllOnes::numSubmat(sample) << endl;
+}
