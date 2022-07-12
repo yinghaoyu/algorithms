@@ -6,6 +6,12 @@
 using namespace std;
 using TdArray = vector<vector<int>>;
 
+// 问题描述：
+// 现有司机N*2人，调度中心将司机平分给A、B两个区域
+// 第i个司机去A可得收入incode[i][0]
+// 第i个司机去B可得收入incode[i][1]
+// 返回所有调度方案中能使所有司机总收入最高的方案，是多少钱？
+
 class Drive
 {
  public:
