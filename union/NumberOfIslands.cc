@@ -1,37 +1,35 @@
 #include <iostream>
-#include <vector>
-#include <unordered_map>
 #include <list>
+#include <unordered_map>
+#include <vector>
 
 using namespace std;
+using TdArray = vector<vector<char>>;
+
 // 本题为leetcode原题
 // 测试链接：https://leetcode.com/problems/number-of-islands/
 
-#define M 100
-#define N 100
-char board[M][N];
-
-/************** WAY 3 暴力递归****************/
+// 暴力递归
 // 从(i,j)这个位置出发，把所有练成一片的'1'字符，变成0
-void infect(char** board, int i, int j)
+void infect(TdArray &board, int i, int j)
 {
-  if (i < 0 || i == M || j < 0 || j == N || board[i][j] != '1')
+  if (i < 0 || i == board.size() || j < 0 || j == board[0].size() || board[i][j] != '1')
   {
     return;
   }
   board[i][j] = 0;
-  infect(board, i - 1, j); // 感染左、右、下、上
+  infect(board, i - 1, j);  // 感染左、右、下、上
   infect(board, i + 1, j);
   infect(board, i, j - 1);
   infect(board, i, j + 1);
 }
 
-int numIslands3(char** board)
+int numIslands3(TdArray &board)
 {
   int islands = 0;
-  for (int i = 0; i < M; i++)
+  for (int i = 0; i < board.size(); i++)
   {
-    for (int j = 0; j < N; j++)
+    for (int j = 0; j < board.size(); j++)
     {
       if (board[i][j] == '1')
       {
@@ -43,48 +41,43 @@ int numIslands3(char** board)
   return islands;
 }
 
-/*************  WAY 1 haspmap******************/
+// hashmap
 typedef struct Dot
 {
-
-}Dot;
+} Dot;
 
 template <typename V>
 class Node
 {
-public:
+ public:
   V value;
 
-  Node(V v)
-  {
-    value = v;
-  }
-
+  Node(V v) { value = v; }
 };
 
 template <typename V>
 class UnionFind1
 {
-public:
-  unordered_map<V, Node<V>*> nodes; // 所有节点
-  unordered_map<Node<V>*, Node<V>*> parents; // key节点的父亲是value
-  unordered_map<Node<V>*, int> sizeMap;   // 这个根节点有多少个孩子
+ public:
+  unordered_map<V, Node<V> *> nodes;            // 所有节点
+  unordered_map<Node<V> *, Node<V> *> parents;  // key节点的父亲是value
+  unordered_map<Node<V> *, int> sizeMap;        // 这个根节点有多少个孩子
 
-  UnionFind1(list<V>& values)
+  UnionFind1(list<V> &values)
   {
     for (V cur : values)
     {
-      Node<V>* node= new Node<V>(cur);  // 给每个元素套壳
+      Node<V> *node = new Node<V>(cur);  // 给每个元素套壳
       nodes.emplace(cur, node);
-      parents.emplace(nodes.at(cur), nodes.at(cur)); // 保存指针就行
+      parents.emplace(nodes.at(cur), nodes.at(cur));  // 保存指针就行
       sizeMap.emplace(nodes.at(cur), 1);
     }
   }
 
   // 找到cur的根节点，并压缩路径
-  Node<V>* findFather(Node<V>* cur)
+  Node<V> *findFather(Node<V> *cur)
   {
-    vector<Node<V>*> path;
+    vector<Node<V> *> path;
     while (parents.find(cur) != parents.end() && cur != parents[cur])
     {
       path.push_back(cur);
@@ -101,33 +94,29 @@ public:
   // 吞并节点
   void unions(V a, V b)
   {
-    Node<V>* aHead = findFather(nodes.at(a));
-    Node<V>* bHead = findFather(nodes.at(b));
-    if (aHead != bHead) // 多的吞并少的
+    Node<V> *aHead = findFather(nodes.at(a));
+    Node<V> *bHead = findFather(nodes.at(b));
+    if (aHead != bHead)  // 多的吞并少的
     {
       int aSetSize = sizeMap.at(aHead);
       int bSetSize = sizeMap.at(bHead);
-      Node<V>* big = aSetSize >= bSetSize ? aHead : bHead;
-      Node<V>* small = big == aHead ? bHead : aHead;
+      Node<V> *big = aSetSize >= bSetSize ? aHead : bHead;
+      Node<V> *small = big == aHead ? bHead : aHead;
       parents.emplace(small, big);
       sizeMap.emplace(big, aSetSize + bSetSize);
       sizeMap.erase(small);
     }
   }
 
-  int sets()
-  {
-    return sizeMap.size();
-  }
-
+  int sets() { return sizeMap.size(); }
 };
 
-int numIslands1(char** board)
+int numIslands1(TdArray &board)
 {
-  int row = M;
-  int col = N;
+  int row = board.size();
+  int col = board[0].size();
   Dot dots[row][col];
-  list<Dot*> dotList;
+  list<Dot *> dotList;
   for (int i = 0; i < row; i++)
   {
     for (int j = 0; j < col; j++)
@@ -138,7 +127,7 @@ int numIslands1(char** board)
       }
     }
   }
-  UnionFind1<Dot*> uf(dotList);
+  UnionFind1<Dot *> uf(dotList);
   for (int j = 1; j < col; j++)  // 第0列元素
   {
     // (0,j)  (0,0)跳过了  (0,1) (0,2) (0,3)
@@ -147,24 +136,24 @@ int numIslands1(char** board)
       uf.unions(&dots[0][j - 1], &dots[0][j]);
     }
   }
-  for (int i = 1; i < row; i++) // 第0行元素
+  for (int i = 1; i < row; i++)  // 第0行元素
   {
     if (board[i - 1][0] == '1' && board[i][0] == '1')
     {
       uf.unions(&dots[i - 1][0], &dots[i][0]);
     }
   }
-  for (int i = 1; i < row; i++) // 从左上到右下，吞并剩下的元素
+  for (int i = 1; i < row; i++)  // 从左上到右下，吞并剩下的元素
   {
     for (int j = 1; j < col; j++)
     {
       if (board[i][j] == '1')
       {
-        if (board[i][j - 1] == '1') // 上
+        if (board[i][j - 1] == '1')  // 上
         {
           uf.unions(&dots[i][j - 1], &dots[i][j]);
         }
-        if (board[i - 1][j] == '1') // 左
+        if (board[i - 1][j] == '1')  // 左
         {
           uf.unions(&dots[i - 1][j], &dots[i][j]);
         }
@@ -174,26 +163,27 @@ int numIslands1(char** board)
   return uf.sets();
 }
 
-/************ WAY 2 数组**************/
+// 数组
 class UnionFind2
 {
-private:
-  int* parent;
-  int* size; // size[i]表示记录以i为根的集合有多少个元素
-  int* help;  // 辅助数组，用于记录路径上所有的元素
+ private:
+  vector<int> parent;
+  vector<int> size;  // size[i]表示记录以i为根的集合有多少个元素
+  vector<int> help;  // 辅助数组，用于记录路径上所有的元素
   int col;
   int number;
 
-public:
-  UnionFind2(char** board)
+ public:
+  UnionFind2(TdArray board)
   {
-    col = N;
+    col = board[0].size();
     number = 0;
-    int row = M;
+    int row = board.size();
     int len = row * col;
-    parent = new int[len];
-    size = new int[len];
-    help = new int[len];
+    vector<int> tmp(len);
+    parent = tmp;
+    size = tmp;
+    help = tmp;
     for (int r = 0; r < row; r++)
     {
       for (int c = 0; c < col; c++)
@@ -201,18 +191,15 @@ public:
         if (board[r][c] == '1')
         {
           int i = index(r, c);  // 二维数组转成一维数组
-          parent[i] = i; // 默认根节点是自己
-          size[i] = 1;  // 以i为根的元素，默认集合元素只有一个
+          parent[i] = i;        // 默认根节点是自己
+          size[i] = 1;          // 以i为根的元素，默认集合元素只有一个
           number++;
         }
       }
     }
   }
   // (r,c) -> i
-  int index(int r, int c)
-  {
-    return r * col + c;
-  }
+  int index(int r, int c) { return r * col + c; }
 
   // 原始位置 -> 下标
   int find(int i)
@@ -252,18 +239,15 @@ public:
     }
   }
 
-  int sets()
-  {
-    return number;
-  }
+  int sets() { return number; }
 };
 
-int numIslands2(char** board)
+int numIslands2(TdArray &board)
 {
-  int row = M;
-  int col = N;
+  int row = board.size();
+  int col = board[0].size();
   UnionFind2 uf(board);
-  for (int j = 1; j < col; j++) // 第0行元素
+  for (int j = 1; j < col; j++)  // 第0行元素
   {
     if (board[0][j - 1] == '1' && board[0][j] == '1')
     {
