@@ -1,24 +1,31 @@
 #include <iostream>
+#include <vector>
+
+using namespace std;
+
+using TdArray = vector<vector<int>>;
 
 // 测试链接：https://leetcode.com/problems/friend-circles/
 class UnionFind
 {
-private:
+ private:
   // parent[i] = k ： i的父亲是k
-  int* parent;
+  vector<int> parent;
   // size[i] = k ： 如果i是代表节点，size[i]才有意义，否则无意义
   // i所在的集合大小是多少
-  int* size;
-  // 辅助结构
-  int* help;
+  vector<int> size;
+  // 辅助结构，用于记录路径上的节点，压缩路径
+  vector<int> help;
   // 一共有多少个集合
   int number;
-public:
+
+ public:
   UnionFind(int N)
   {
-    parent = new int[N];
-    size = new int[N];
-    help = new int[N];
+    vector<int> tmp(N);
+    parent = tmp;
+    size = tmp;
+    help = tmp;
     number = N;
     for (int i = 0; i < N; i++)
     {
@@ -51,7 +58,8 @@ public:
     if (f1 != f2)
     {
       if (size[f1] >= size[f2])
-      { // 多的吞并少的
+      {
+        // 多的吞并少的
         size[f1] += size[f2];
         parent[f2] = f1;
       }
@@ -64,13 +72,10 @@ public:
     }
   }
 
-  int sets()
-  {
-    return number;
-  }
+  int sets() { return number; }
 };
 
-int findCircleNum(int** M, int N)
+int findCircleNum(int **M, int N)
 {
   // {0} {1} {2} {N-1}
   UnionFind unionFind(N);
@@ -79,7 +84,7 @@ int findCircleNum(int** M, int N)
     for (int j = i + 1; j < N; j++)
     {
       if (M[i][j] == 1)
-      { // i和j互相认识
+      {  // i和j互相认识
         unionFind.unions(i, j);
       }
     }
