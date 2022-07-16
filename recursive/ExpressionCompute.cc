@@ -37,7 +37,7 @@ class ExpressionCompute
         // 遇到的是运算符号
         addNum(que, cur);
         que.push_back(string(1, str[i++]));
-        cur = 0;
+        cur = 0;  // 这里要把cur清0，重新计算下一个数
       }
       else
       {  // 遇到左括号了
@@ -76,7 +76,7 @@ class ExpressionCompute
   static int getNum(deque<string> &que)
   {
     int res = 0;
-    bool add = true;
+    bool add = true;  // 如果没有负号，默认是正数
     string cur;
     int num = 0;
     while (!que.empty())
