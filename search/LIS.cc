@@ -25,6 +25,7 @@ class LIS
     }
     // ends数组
     // ends[i]表示 : 目前所有长度为i+1的递增子序列的最小结尾
+    // 按照逻辑，ends一定是严格递增的
     vector<int> ends(arr.size());
     // 根据含义, 一开始ends[0] = arr[0]
     ends[0] = arr[0];
