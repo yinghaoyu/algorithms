@@ -40,7 +40,7 @@ class ConstructBinarySearchTreeFromPreorderTraversal
     return process1(pre, 0, pre.size() - 1);
   }
 
-  static TreeNode *process1(vector<int> *pre, int L, int R)
+  static TreeNode *process1(vector<int> &pre, int L, int R)
   {
     if (L > R)
     {
