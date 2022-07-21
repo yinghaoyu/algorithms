@@ -5,7 +5,12 @@
 using namespace std;
 using TdArray = vector<vector<int>>;
 
+// 问题描述：
+// 给定一个字符串 s 和一个字符串 t ，计算在 s 的子序列中 t 出现的个数。
+// 字符串的一个 子序列 是指，通过删除一些（也可以不删除）字符且不干扰剩余字符相对位置所组成的新字符串。（例如，"ACE" 是 "ABCDE" 的一个子序列，而 "AEC" 不是）
+
 // 测试链接 : https://leetcode-cn.com/problems/21dk04/
+
 class DistinctSubseq
 {
  public:
@@ -83,17 +88,24 @@ class DistinctSubseq
     int N = s.length();
     int M = t.length();
     TdArray dp(N, vector<int>(M));
+    // dp[i][j]的含义为，任取s中0...i位置的子序列，有多少能组成前缀为0...j的t
     // s[0..0] T[0..0] dp[0][0]
-    dp[0][0] = s[0] == t[0] ? 1 : 0;
+    dp[0][0] = s[0] == t[0] ? 1 : 0;  // 只有一个字符，相等的时候有1种方法
     for (int i = 1; i < N; i++)
     {
+      // s有i个字符，t只有1个字符，只要新的字符和t[0]相等，方法数一直递增
+      // 比如s="aaa"，t="a"
+      // dp[0][0] = 1，dp[1][0] = 2，dp[2][0]=3
       dp[i][0] = s[i] == t[0] ? (dp[i - 1][0] + 1) : dp[i - 1][0];
     }
     for (int i = 1; i < N; i++)
     {
+      // 当s长度小于t时，s怎么都不能组成t，因此i > j时，dp[i][j] = 0，这里取i和M-1是为了防止越界
       for (int j = 1; j <= std::min(i, M - 1); j++)
       {
+        // 情况1：0...i-1位置s的子序列就可能组成前缀0...j的t
         dp[i][j] = dp[i - 1][j];
+        // 情况2：s[i]和t[j]字符相同，那么只要0...i-1位置s的子序列可以组成0...j-1的t
         if (s[i] == t[j])
         {
           dp[i][j] += dp[i - 1][j - 1];
