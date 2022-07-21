@@ -33,6 +33,9 @@ class KthSmallestElementInSortedMatrix
     Node *ans = nullptr;
     while (!heap.empty())
     {
+      // 为什么不需要所有数全进堆再pop？
+      // 因为二维本组本来就是按行、按列升序的，
+      // 只需要从左往右，从上往下依次进堆，pop出来的一定是最小的元素
       ans = heap.top();
       heap.pop();
       if (++count == k)
@@ -128,8 +131,8 @@ class KthSmallestElementInSortedMatrix
     {
       if (matrix[row][col] <= value)
       {
-        near = std::max(near, matrix[row][col]);
-        num += col + 1;
+        near = std::max(near, matrix[row][col]);  // near为最接近value的数
+        num += col + 1;                           // num 为符合条件的数的数量
         row++;
       }
       else
