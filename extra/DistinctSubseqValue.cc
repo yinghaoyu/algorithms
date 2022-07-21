@@ -35,24 +35,34 @@ class DistinctSubseqValue
     return all - 1;
   }
 
+  // 假设str="aba"，
+  // 思路：初始时集合为空集，每次遍历字符str[i]，新的集合为上一个集合 + 当前集合(上一个集合所有元素+str[i])
+  // 1、{空集}
+  // 2、{空集}、{a}  --> 第一个a出现的位置，{空集}+a生成的新集合为{a}
+  // 3、{空集}、{a}、{b}、{a, b}  --> 第一个b出现的位置，({空集}、{a}) + b生成的新集合为{b}、{a, b}
+  // 4、{空集}、{a}、{b}、{a, b}、{a}、{a, a}、{b, a}、{a, b, a}  -->第二个a出现的位置，此时{a}和{a}重复了
+  // 此时需要减去{a}，即上次a出现的位置，生成的新集合的数量
+
   static int zuo(string str)
   {
     if (str.length() == 0)
     {
       return 0;
     }
-    int m = 1000000007;
+    // int m = 1000000007;
     unordered_map<char, int> map;
     int all = 1;  // 一个字符也没遍历的时候，有空集
     for (char x : str)
     {
-      int newAdd = all;
-      //			int curAll = all + newAdd - (map.containsKey(x) ? map.get(x) : 0);
-      int curAll = all;
-      curAll = (curAll + newAdd) % m;
-      curAll = (curAll - (map.find(x) != map.end() ? map.at(x) : 0) + m) % m;
-      all = curAll;
-      map[x] = newAdd;
+      int newAdd = all;  // 当前新集合的基础是上一个集合所有元素+str[i]，元素的数量是一样的
+      // 有相同字符，修正时，需要减去上次相同字符生成的新集合数量
+      int curAll = all + newAdd - (map.find(x) != map.end() ? map.at(x) : 0);
+      // int curAll = all;
+      // curAll = (curAll + newAdd) % m;
+      // 减法可能变负数，+m保证最终的值是正数
+      // curAll = (curAll - (map.find(x) != map.end() ? map.at(x) : 0) + m) % m;
+      all = curAll;     // 记录本次的集合数量
+      map[x] = newAdd;  // 记录当前字符新生成的集合数量
     }
     return all;
   }
