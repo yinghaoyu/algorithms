@@ -38,6 +38,9 @@ class PowXN
     double ans = 1.0;
     while (pow != 0)
     {
+      // 10^13
+      // 13 == 1101
+      // 10 * 10^4 * 10^8
       if ((pow & 1) != 0)
       {
         ans *= t;
