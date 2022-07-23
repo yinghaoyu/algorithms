@@ -21,8 +21,10 @@ class MagicStone
     // 否则就按，无色、红色、蓝色排序
     bool operator()(vector<int> &a, vector<int> &b)
     {
-      // FIXME：这里的排序规则有问题
-      bool res = a[0] == b[0] ? (a[1] - a[2] - b[1] + b[2]) : (a[0] - b[0]);
+      // 这种写法是错的!
+      // a[0] == b[0] ? (a[1] - a[2] - b[1] + b[2]) : (a[0] - b[0])
+      // 注意，这里必须用 >，bool值非0即为真，负数也为真!
+      bool res = a[0] == b[0] ? (a[1] - a[2] > b[1] - b[2]) : (a[0] < b[0]);
       return res;
     }
   };
