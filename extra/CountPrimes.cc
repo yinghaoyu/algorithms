@@ -5,6 +5,8 @@ using namespace std;
 
 // 问题描述： 计算素数或者叫质数
 
+// 测试链接：https://leetcode.cn/problems/count-primes/
+
 class CountPrimes
 {
  public:
