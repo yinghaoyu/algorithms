@@ -1,9 +1,10 @@
+#include <algorithm>
 #include <iostream>
-#include <stdbool.h>
 #include <string>
-#include <string.h>
+#include <vector>
 
 using namespace std;
+using TdArray = vector<vector<int>>;
 
 // 测试链接：https://leetcode.com/problems/longest-palindromic-subsequence/
 
@@ -25,191 +26,148 @@ using namespace std;
 
 class PalindromeSubsequence
 {
-  public:
-
-    static int** mallocArray(int row, int column)
+ public:
+  static int lpsl1(string str)
+  {
+    if (str.length() == 0)
     {
-      int** arr = (int**)malloc(sizeof(int*) * row);
-      for(int i = 0; i < row; i++)
-      {
-        arr[i] = (int*)malloc(sizeof(int) * column);
-        memset(arr[i], 0, sizeof(int) * column);
-      }
-      return arr;
+      return 0;
     }
+    return f(str, 0, str.length() - 1);
+  }
 
-    static void freeArray(int** arr, int row)
+  // str[L..R]最长回文子序列长度返回
+  static int f(string str, int L, int R)
+  {
+    if (L == R)  // 只有一个字符
     {
-      for(int i = 0; i < row; i++)
-      {
-        free(arr[i]);
-      }
-      free(arr);
+      return 1;
     }
-
-    static int lpsl1(string s)
+    if (L == R - 1)  // 两个字符
     {
-      if (s.length() == 0)
-      {
-        return 0;
-      }
-      const char* str = s.c_str();
-      int len = strlen(str);
-      return f(str, 0, len - 1);
+      return str[L] == str[R] ? 2 : 1;
     }
+    int p1 = f(str, L + 1, R - 1);                               // 排除最左边、最右边
+    int p2 = f(str, L, R - 1);                                   // 排除最右边
+    int p3 = f(str, L + 1, R);                                   // 排除最左边
+    int p4 = str[L] != str[R] ? 0 : (2 + f(str, L + 1, R - 1));  // 包含最左最右
+    return std::max(std::max(p1, p2), std::max(p3, p4));
+  }
 
-    // str[L..R]最长回文子序列长度返回
-    static int f(const char* str, int L, int R)
+  static int lpsl2(string str)
+  {
+    if (str.length() == 0)
     {
-      if (L == R) // 只有一个字符
-      {
-        return 1;
-      }
-      if (L == R - 1) // 两个字符
-      {
-        return str[L] == str[R] ? 2 : 1;
-      }
-      int p1 = f(str, L + 1, R - 1);  // 排除最左边、最右边
-      int p2 = f(str, L, R - 1);  // 排除最右边
-      int p3 = f(str, L + 1, R);  // 排除最左边
-      int p4 = str[L] != str[R] ? 0 : (2 + f(str, L + 1, R - 1));  // 包含最左最右
-      return std::max(std::max(p1, p2), std::max(p3, p4));
+      return 0;
     }
-
-    static int lpsl2(string s)
+    int N = str.size();
+    TdArray dp(N, vector<int>(N));
+    dp[N - 1][N - 1] = 1;
+    for (int i = 0; i < N - 1; i++)
     {
-      if (s.length() == 0)
+      // base case
+      dp[i][i] = 1;
+      dp[i][i + 1] = str[i] == str[i + 1] ? 2 : 1;
+    }
+    // L <= R 说明dp表有一半区域无效
+    for (int L = N - 3; L >= 0; L--)
+    {
+      for (int R = L + 2; R < N; R++)
       {
-        return 0;
-      }
-      const char* str = s.c_str();
-      int N = strlen(str);
-      int** dp = mallocArray(N, N);
-      dp[N - 1][N - 1] = 1;
-      for (int i = 0; i < N - 1; i++)
-      {
-        // base case
-        dp[i][i] = 1;
-        dp[i][i + 1] = str[i] == str[i + 1] ? 2 : 1;
-      }
-      // L <= R 说明dp表有一半区域无效
-      for (int L = N - 3; L >= 0; L--)
-      {
-        for (int R = L + 2; R < N; R++)
+        dp[L][R] = std::max(dp[L][R - 1], dp[L + 1][R]);
+        if (str[L] == str[R])
         {
-          dp[L][R] = std::max(dp[L][R - 1], dp[L + 1][R]);
-          if (str[L] == str[R])
-          {
-            dp[L][R] = std::max(dp[L][R], 2 + dp[L + 1][R - 1]);
-          }
+          dp[L][R] = std::max(dp[L][R], 2 + dp[L + 1][R - 1]);
         }
       }
-      int ans = dp[0][N - 1];
-      freeArray(dp, N);
-      return ans;
+    }
+    return dp[0][N - 1];
+  }
+
+  static int longestPalindromeSubseq1(string str)
+  {
+    if (str.length() == 0)
+    {
+      return 0;
     }
 
-    static int longestPalindromeSubseq1(string s)
+    if (str.length() == 1)
     {
-      if (s.length() == 0)
-      {
-        return 0;
-      }
-
-      if (s.length() == 1)
-      {
-        return 1;
-      }
-
-      const char* str = s.c_str();
-      const char* rev = reverse(str);
-      // 最长回文子序列就是该字符串与反转后的字符串的最长公共子序列
-      return longestCommonSubsequence(str, rev);
+      return 1;
     }
+    string rev = str;
+    std::reverse(rev.begin(), rev.end());
+    // 最长回文子序列就是该字符串与反转后的字符串的最长公共子序列
+    return longestCommonSubsequence(str, rev);
+  }
 
-    static const char* reverse(const char* str)
+  // 其中 dp[i][j] 表示 str1[0:i] 和 str2[0:j] 的最长公共子序列的长度
+  static int longestCommonSubsequence(string str1, string str2)
+  {
+    int N = str1.length();
+    int M = str2.length();
+    TdArray dp(N, vector<int>(M));
+    // dp[i][j]表示任取str1[0...i]，能组成str2[0...j]公共长度的方法数
+    // base case
+    // str1[0:i]  str2[0:j] 都只有一个字符，相等就长度为1
+    dp[0][0] = str1[0] == str2[0] ? 1 : 0;
+    for (int i = 1; i < N; i++)
     {
-      int N = strlen(str);
-      char* reverse = (char*)malloc(sizeof(char) * (N+1));
-      for (int i = 0, j = N; i < N; i++)
-      {
-        reverse[--j] = str[i];
-      }
-      reverse[N] = '\0';
-      return reverse;
+      // str2[0:j] 只有一个字符
+      dp[i][0] = str1[i] == str2[0] ? 1 : dp[i - 1][0];
     }
-
-    // 其中 dp[i][j] 表示 str1[0:i] 和 str2[0:j] 的最长公共子序列的长度
-    static int longestCommonSubsequence(const char* str1, const char* str2)
+    for (int j = 1; j < M; j++)
     {
-      int N = strlen(str1);
-      int M = strlen(str2);
-      int** dp = mallocArray(N, M);
-      // base case
-      // str1[0:i]  str2[0:j] 都只有一个字符，相等就长度为1
-      dp[0][0] = str1[0] == str2[0] ? 1 : 0;
-      for (int i = 1; i < N; i++)
-      {
-        // str2[0:j] 只有一个字符
-        dp[i][0] = str1[i] == str2[0] ? 1 : dp[i - 1][0];
-      }
+      // str[0:i] 只有一个字符
+      dp[0][j] = str1[0] == str2[j] ? 1 : dp[0][j - 1];
+    }
+    for (int i = 1; i < N; i++)
+    {
       for (int j = 1; j < M; j++)
       {
-        // str[0:i] 只有一个字符
-        dp[0][j] = str1[0] == str2[j] ? 1 : dp[0][j - 1];
-      }
-      for (int i = 1; i < N; i++)
-      {
-        for (int j = 1; j < M; j++)
+        // str1[0:i] 和 str2[0:j] 依赖于 str1[0:i-1] 和 str2[0:j-1]
+        dp[i][j] = std::max(dp[i - 1][j], dp[i][j - 1]);
+        // 如果新加入的字符相等，则在原来的dp[i-1][j-1]基础上加上+1
+        if (str1[i] == str2[j])
         {
-          // str1[0:i] 和 str2[0:j] 依赖于 str1[0:i-1] 和 str2[0:j-1]
-          dp[i][j] = std::max(dp[i - 1][j], dp[i][j - 1]);
-          // 如果新加入的字符相等，则在原来的dp[i-1][j-1]基础上加上+1
-          if (str1[i] == str2[j])
-          {
-            dp[i][j] = std::max(dp[i][j], dp[i - 1][j - 1] + 1);
-          }
+          dp[i][j] = std::max(dp[i][j], dp[i - 1][j - 1] + 1);
         }
       }
-      int ans = dp[N - 1][M -1];
-      freeArray(dp, N);
-      return ans;
     }
+    return dp[N - 1][M - 1];
+  }
 
-    static int longestPalindromeSubseq2(string s)
+  static int longestPalindromeSubseq2(string str)
+  {
+    if (str.length() == 0)
     {
-      if (s.length() == 0)
+      return 0;
+    }
+    if (str.length() == 1)
+    {
+      return 1;
+    }
+    int N = str.length();
+    TdArray dp(N, vector<int>(N));
+    dp[N - 1][N - 1] = 1;
+    for (int i = 0; i < N - 1; i++)
+    {
+      dp[i][i] = 1;                                 // 只有一个字符
+      dp[i][i + 1] = str[i] == str[i + 1] ? 2 : 1;  // 两个字符相等就有2种回文子序列
+    }
+    for (int i = N - 3; i >= 0; i--)
+    {
+      for (int j = i + 2; j < N; j++)
       {
-        return 0;
-      }
-      if (s.length() == 1)
-      {
-        return 1;
-      }
-      const char* str = s.c_str();
-      int N = strlen(str);
-      int** dp = mallocArray(N, N);
-      dp[N - 1][N - 1] = 1;
-      for (int i = 0; i < N - 1; i++)
-      {
-        dp[i][i] = 1;  // 只有一个字符
-        dp[i][i + 1] = str[i] == str[i + 1] ? 2 : 1;  // 两个字符相等就有2种回文子序列
-      }
-      for (int i = N - 3; i >= 0; i--)
-      {
-        for (int j = i + 2; j < N; j++)
+        dp[i][j] = std::max(dp[i][j - 1], dp[i + 1][j]);
+        if (str[i] == str[j])
         {
-          dp[i][j] = std::max(dp[i][j - 1], dp[i + 1][j]);
-          if (str[i] == str[j])
-          {
-            dp[i][j] = std::max(dp[i][j], dp[i + 1][j - 1] + 2);
-          }
+          dp[i][j] = std::max(dp[i][j], dp[i + 1][j - 1] + 2);
         }
       }
-      int ans = dp[0][N-1];  // 整个子串的最长回文子序列
-      freeArray(dp, N);
-      return ans;
     }
+    return dp[0][N - 1];  // 整个子串的最长回文子序列
+  }
 };
 
 int main()
