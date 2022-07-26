@@ -18,8 +18,8 @@ class GameOfLife
     {
       for (int j = 0; j < M; j++)
       {
-        int neighbors = neighbors(board, i, j);
-        if (neighbors == 3 || (board[i][j] == 1 && neighbors == 2))
+        int n = neighbors(board, i, j);
+        if (n == 3 || (board[i][j] == 1 && n == 2))
         {
           board[i][j] |= 2;
         }
