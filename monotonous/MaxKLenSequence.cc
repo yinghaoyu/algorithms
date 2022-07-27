@@ -58,6 +58,9 @@ class MaxKLenSequence
   }
 
   // 为了测试
+  // 枚举所有子序列
+  // 从str[si]...位置开始选字符，填到path[pi]的位置
+  // 直到si越界，如果pi也刚好越界，就将path加入答案中
   static void process(int si, int pi, string &str, string &path, set<string> &ans)
   {
     if (si == str.length())
