@@ -3,6 +3,7 @@
 #include <vector>
 
 using namespace std;
+using TdArray = vector<vector<char>>;
 
 // 测试链接：https://leetcode.com/problems/maximal-rectangle/
 // 题目描述：
@@ -39,14 +40,14 @@ class MaximalRectangle
   // | |  | |
   // |_|__|_|__
   // 对每行进行LargestRectangleInHistogram，取最大值
-  static int maximalRectangle(char **map, int row, int column)
+  static int maximalRectangle(TdArray map, int row, int column)
   {
-    if (map == nullptr || row == 0 || column == 0)
+    if (row == 0 || column == 0)
     {
       return 0;
     }
     int maxArea = 0;
-    int *height = new int[column]();
+    vector<int> height(column);
     for (int i = 0; i < row; i++)
     {
       for (int j = 0; j < column; j++)
@@ -54,21 +55,21 @@ class MaximalRectangle
         // 前一行的前缀和传递给下一行
         height[j] = map[i][j] == '0' ? 0 : height[j] + 1;
       }
-      maxArea = std::max(maxRecFromBottom(height, column), maxArea);
+      maxArea = std::max(maxRecFromBottom(height), maxArea);
     }
     return maxArea;
   }
 
   // height是正方图数组
-  static int maxRecFromBottom(int *height, int len)
+  static int maxRecFromBottom(vector<int> &height)
   {
-    if (height == nullptr || len == 0)
+    if (height.size() == 0)
     {
       return 0;
     }
     int maxArea = 0;
     vector<int> stack;
-    for (int i = 0; i < len; i++)
+    for (int i = 0; i < height.size(); i++)
     {
       // 单调递增栈
       while (!stack.empty() && height[i] <= height[stack.back()])
@@ -86,7 +87,7 @@ class MaximalRectangle
       int j = stack.back();
       stack.pop_back();
       int k = stack.empty() ? -1 : stack.back();
-      int curArea = (len - k - 1) * height[j];
+      int curArea = (height.size() - k - 1) * height[j];
       maxArea = std::max(maxArea, curArea);
     }
     return maxArea;

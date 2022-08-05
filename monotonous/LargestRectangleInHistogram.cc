@@ -20,15 +20,15 @@ using namespace std;
 class LargestRectangleInHistogram
 {
  public:
-  static int largestRectangleArea1(int *height, int len)
+  static int largestRectangleArea1(vector<int> &height)
   {
-    if (height == nullptr || len == 0)
+    if (height.size() == 0)
     {
       return 0;
     }
     int maxArea = 0;
     vector<int> stack;
-    for (int i = 0; i < len; i++)
+    for (int i = 0; i < height.size(); i++)
     {
       // 单调递增栈
       while (!stack.empty() && height[i] <= height[stack.back()])
@@ -47,23 +47,23 @@ class LargestRectangleInHistogram
       int j = stack.back();
       stack.pop_back();
       int k = stack.empty() ? -1 : stack.back();
-      int curArea = (len - k - 1) * height[j];
+      int curArea = (height.size() - k - 1) * height[j];
       maxArea = std::max(maxArea, curArea);
     }
     return maxArea;
   }
 
-  static int largestRectangleArea2(int *height, int len)
+  static int largestRectangleArea2(vector<int> &height)
   {
-    if (height == nullptr || len == 0)
+    if (height.size() == 0)
     {
       return 0;
     }
-    int N = len;
-    int *stack = new int[N];
+    int N = height.size();
+    vector<int> stack(N);
     int si = -1;
     int maxArea = 0;
-    for (int i = 0; i < len; i++)
+    for (int i = 0; i < N; i++)
     {
       while (si != -1 && height[i] <= height[stack[si]])
       {
@@ -78,7 +78,7 @@ class LargestRectangleInHistogram
     {
       int j = stack[si--];
       int k = si == -1 ? -1 : stack[si];
-      int curArea = (len - k - 1) * height[j];
+      int curArea = (N - k - 1) * height[j];
       maxArea = std::max(maxArea, curArea);
     }
     return maxArea;

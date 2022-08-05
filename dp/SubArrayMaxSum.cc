@@ -33,4 +33,4 @@ class SubArrayMaxSum
     }
     return max;
   }
-}
+};

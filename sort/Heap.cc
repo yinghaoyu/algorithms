@@ -31,6 +31,9 @@ void swap(int arr[], int i, int j)
 
 // 新加进来的数，现在停在了index位置，请依次往上移动，
 // 移动到0位置，或者干不掉自己的父亲了，停！
+// 条件：如果是小根堆，这个index位置更新的值必须 <= 原来的值
+//       如果是大根堆，这个index位置更新的值必须 >= 原来的值
+//       只有这样，index及子树的节点都满足堆的规则，只需要向上调整就行了
 // 时间复杂度：log(N)
 void heapInsert(int arr[], int index)
 {

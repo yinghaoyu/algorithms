@@ -10,48 +10,45 @@ using namespace std;
 // 不要提交这个类
 class DirectedGraphNode
 {
-public:
+ public:
   int label;
-  list<DirectedGraphNode*> neighbors;
+  list<DirectedGraphNode *> neighbors;
 
-  DirectedGraphNode(int x)
-  {
-    label = x;
-  }
+  DirectedGraphNode(int x) { label = x; }
 };
 
 // 提交下面的
 class Record
 {
-public:
-  DirectedGraphNode* node;
+ public:
+  DirectedGraphNode *node;
   int deep;  // 记录每个节点能达到的最大深度
 
-  Record(DirectedGraphNode* n, int o)
+  Record(DirectedGraphNode *n, int o)
   {
     node = n;
     deep = o;
   }
-  //bool operator < (Record& other) // 重载<就是重载默认sort规则
+  // bool operator < (Record& other) // 重载<就是重载默认sort规则
   //{
   //  return this->deep < other.deep;
   //}
 };
 
 // 比较器
-bool cmp(const Record& a, const Record& b)
+bool cmp(const Record &a, const Record &b)
 {
   return a.deep > b.deep;
 }
 
-Record f(DirectedGraphNode* cur, unordered_map<DirectedGraphNode*, Record>& order)
+Record f(DirectedGraphNode *cur, unordered_map<DirectedGraphNode *, Record> &order)
 {
   if (order.find(cur) != order.end())  // 节点已记录，就返回当前节点的记录
   {
     return order.at(cur);
   }
   int follow = 0;
-  for (DirectedGraphNode* next : cur->neighbors)
+  for (DirectedGraphNode *next : cur->neighbors)
   {
     follow = std::max(follow, f(next, order).deep);  // 取最大的深度
   }
@@ -60,10 +57,10 @@ Record f(DirectedGraphNode* cur, unordered_map<DirectedGraphNode*, Record>& orde
   return ans;
 }
 
-list<DirectedGraphNode*> topSort(list<DirectedGraphNode*>& graph)
+list<DirectedGraphNode *> topSort(list<DirectedGraphNode *> &graph)
 {
-  unordered_map<DirectedGraphNode*, Record> order;
-  for (DirectedGraphNode* cur : graph)
+  unordered_map<DirectedGraphNode *, Record> order;
+  for (DirectedGraphNode *cur : graph)
   {
     f(cur, order);  // 得到所有节点能达到的深度
   }
@@ -73,11 +70,10 @@ list<DirectedGraphNode*> topSort(list<DirectedGraphNode*>& graph)
     recordArr.push_back(r.second);
   }
   recordArr.sort(cmp);  // 按深度从大到小排序，即为所得解
-  list<DirectedGraphNode*> ans;
+  list<DirectedGraphNode *> ans;
   for (auto r : recordArr)
   {
     ans.push_back(r.node);
   }
   return ans;
 }
-

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <random>
+#include <vector>
 
 using namespace std;
 
@@ -13,13 +14,13 @@ class BestSplitForAll
 {
  public:
   // 暴力解时间复杂度O(log(N))
-  static int bestSplit1(int *arr, int len)
+  static int bestSplit1(vector<int> &arr)
   {
-    if (arr == nullptr || len < 2)
+    if (arr.size() < 2)
     {
       return 0;
     }
-    int N = len;
+    int N = arr.size();
     int ans = 0;
     for (int s = 0; s < N - 1; s++)
     {
@@ -40,15 +41,15 @@ class BestSplitForAll
   }
 
   // 利用前缀和时间复杂度降为O(log(N))
-  static int bestSplit2(int *arr, int len)
+  static int bestSplit2(vector<int> &arr)
   {
-    if (arr == nullptr || len < 2)
+    if (arr.size() < 2)
     {
       return 0;
     }
-    int N = len;
+    int N = arr.size();
     int sumAll = 0;
-    for (int i = 0; i < len; i++)
+    for (int i = 0; i < N; i++)
     {
       sumAll += arr[i];
     }
@@ -64,9 +65,9 @@ class BestSplitForAll
     return ans;
   }
 
-  static int *randomArray(int len, int max)
+  static vector<int> randomArray(int len, int max)
   {
-    int *ans = new int[len]();
+    vector<int> ans(len);
     for (int i = 0; i < len; i++)
     {
       ans[i] = getRandom(0, max);
@@ -92,9 +93,9 @@ class BestSplitForAll
     for (int i = 0; i < testTime; i++)
     {
       int len = getRandom(0, N);
-      int *arr = randomArray(len, max);
-      int ans1 = bestSplit1(arr, len);
-      int ans2 = bestSplit2(arr, len);
+      vector<int> arr = randomArray(len, max);
+      int ans1 = bestSplit1(arr);
+      int ans2 = bestSplit2(arr);
       if (ans1 != ans2)
       {
         cout << ans1 << endl;

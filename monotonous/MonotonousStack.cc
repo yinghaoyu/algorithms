@@ -1,11 +1,10 @@
-#include <memory.h>
-#include <stdbool.h>
 #include <stdint.h>
 #include <iostream>
 #include <random>
 #include <vector>
 
 using namespace std;
+using TdArray = vector<vector<int>>;
 
 // 题目描述：给定一个不含有重复值的数组 arr，找到每一个 i 位置左边和右边离 i 位置最近且值比 arr[i]小的位置。返回所有位置相应的信息。
 
@@ -22,12 +21,12 @@ class MonotonousStack
 {
  public:
   // 要求没有重复的数
-  static int **getNearLessNoRepeat(int *arr, int len)
+  static TdArray getNearLessNoRepeat(vector<int> &arr)
   {
-    int **res = mallocArray(len, 2);
+    TdArray res(arr.size(), vector<int>(2));
     // 只存位置！
     vector<int> stack;
-    for (int i = 0; i < len; i++)
+    for (int i = 0; i < arr.size(); i++)
     {
       // 当遍历到i位置的数arr[i]，创建递增栈
       while (!stack.empty() && arr[stack.back()] > arr[i])
@@ -58,11 +57,11 @@ class MonotonousStack
   }
 
   // 可以有重复的数
-  static int **getNearLess(int *arr, int len)
+  static TdArray getNearLess(vector<int> &arr)
   {
-    int **res = mallocArray(len, 2);
-    vector<vector<int>> stack;
-    for (int i = 0; i < len; i++)
+    TdArray res(arr.size(), vector<int>(2));
+    TdArray stack;
+    for (int i = 0; i < arr.size(); i++)
     {
       // i -> arr[i] 进栈
       while (!stack.empty() && arr[stack.back().at(0)] > arr[i])
@@ -104,17 +103,16 @@ class MonotonousStack
   }
 
   // for test
-  static int *getRandomArrayNoRepeat(int size, int *len)
+  static vector<int> getRandomArrayNoRepeat(int size)
   {
-    *len = getRandom(0, size);
-    int *arr = new int[*len];
-    for (int i = 0; i < *len; i++)
+    vector<int> arr(getRandom(0, size));
+    for (int i = 0; i < arr.size(); i++)
     {
       arr[i] = i;
     }
-    for (int i = 0; i < *len; i++)
+    for (int i = 0; i < arr.size(); i++)
     {
-      int swapIndex = getRandom(0, *len - 1);
+      int swapIndex = getRandom(0, arr.size() - 1);
       int tmp = arr[swapIndex];
       arr[swapIndex] = arr[i];
       arr[i] = tmp;
@@ -123,11 +121,10 @@ class MonotonousStack
   }
 
   // for test
-  static int *getRandomArray(int size, int max, int *len)
+  static vector<int> getRandomArray(int size, int max)
   {
-    *len = getRandom(0, size);
-    int *arr = new int[*len];
-    for (int i = 0; i < *len; i++)
+    vector<int> arr(getRandom(0, size));
+    for (int i = 0; i < arr.size(); i++)
     {
       arr[i] = getRandom(0, max);
     }
@@ -136,10 +133,10 @@ class MonotonousStack
 
   // for test
   // 暴力解
-  static int **rightWay(int *arr, int len)
+  static TdArray rightWay(vector<int> &arr)
   {
-    int **res = mallocArray(len, 2);
-    for (int i = 0; i < len; i++)
+    TdArray res(arr.size(), vector<int>(2));
+    for (int i = 0; i < arr.size(); i++)
     {
       int leftLessIndex = -1;
       int rightLessIndex = -1;
@@ -154,7 +151,7 @@ class MonotonousStack
         cur--;
       }
       cur = i + 1;
-      while (cur < len)
+      while (cur < arr.size())
       {
         if (arr[cur] < arr[i])
         {
@@ -170,13 +167,13 @@ class MonotonousStack
   }
 
   // for test
-  static bool isEqual(int **res1, int **res2, int len1, int len2)
+  static bool isEqual(TdArray res1, TdArray res2)
   {
-    if (len1 != len2)
+    if (res1.size() != res2.size())
     {
       return false;
     }
-    for (int i = 0; i < len1; i++)
+    for (int i = 0; i < res1.size(); i++)
     {
       if (res1[i][0] != res2[i][0] || res1[i][1] != res2[i][1])
       {
@@ -185,27 +182,6 @@ class MonotonousStack
     }
 
     return true;
-  }
-
-  // for test
-  static int **mallocArray(int row, int column)
-  {
-    int **arr = (int **) malloc(sizeof(int *) * row);
-    for (int i = 0; i < row; i++)
-    {
-      arr[i] = (int *) malloc(sizeof(int) * column);
-      memset(arr[i], 0, sizeof(int) * column);
-    }
-    return arr;
-  }
-
-  static void freeArray(int **arr, int row)
-  {
-    for (int i = 0; i < row; i++)
-    {
-      free(arr[i]);
-    }
-    free(arr);
   }
 
   static int getRandom(int min, int max)
@@ -218,9 +194,9 @@ class MonotonousStack
   }
 
   // 为了测试
-  static void printArray(int *arr, int len)
+  static void printArray(vector<int> &arr)
   {
-    for (int i = 0; i < len; i++)
+    for (int i = 0; i < arr.size(); i++)
     {
       cout << arr[i] << " ";
     }
@@ -232,24 +208,22 @@ class MonotonousStack
     int size = 10;
     int max = 20;
     int testTimes = 2000000;
-    int len1 = 0;
-    int len2 = 0;
 
     cout << "测试开始" << endl;
     for (int i = 0; i < testTimes; i++)
     {
-      int *arr1 = getRandomArrayNoRepeat(size, &len1);
-      int *arr2 = getRandomArray(size, max, &len2);
-      if (!isEqual(getNearLessNoRepeat(arr1, len1), rightWay(arr1, len1), len1, len1))
+      vector<int> arr1 = getRandomArrayNoRepeat(size);
+      vector<int> arr2 = getRandomArray(size, max);
+      if (!isEqual(getNearLessNoRepeat(arr1), rightWay(arr1)))
       {
         cout << "No Repeat Oops!" << endl;
-        printArray(arr1, len1);
+        printArray(arr1);
         break;
       }
-      if (!isEqual(getNearLess(arr2, len2), rightWay(arr2, len2), len2, len2))
+      if (!isEqual(getNearLess(arr2), rightWay(arr2)))
       {
         cout << "Oops!" << endl;
-        printArray(arr2, len2);
+        printArray(arr2);
         break;
       }
     }

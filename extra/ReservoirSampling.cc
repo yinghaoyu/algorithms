@@ -1,5 +1,6 @@
 #include <iostream>
 #include <random>
+#include <vector>
 
 using namespace std;
 
@@ -47,13 +48,13 @@ class ReservoirSampling
   class RandomBox
   {
    public:
-    int *bag;
+    vector<int> bag;
     int N;      // 蓄水池的容量m
     int count;  // 当前接收的数据序号i
 
     RandomBox(int capacity)
     {
-      bag = new int[capacity]();
+      bag = vector<int>(capacity);
       N = capacity;
       count = 0;
     }
@@ -80,9 +81,9 @@ class ReservoirSampling
       }
     }
 
-    int *choices()
+    vector<int> choices()
     {
-      int *ans = new int[N]();
+      vector<int> ans(N);
       for (int i = 0; i < N; i++)
       {
         ans[i] = bag[i];
@@ -109,7 +110,7 @@ class ReservoirSampling
     int all = 100;
     int choose = 10;
     int testTimes = 50000;
-    int *counts = new int[all + 1]();
+    vector<int> counts(all + 1);
     for (int i = 0; i < testTimes; i++)
     {
       RandomBox box(choose);
@@ -117,7 +118,7 @@ class ReservoirSampling
       {
         box.add(num);
       }
-      int *ans = box.choices();
+      vector<int> ans = box.choices();
       for (int j = 0; j < box.N; j++)
       {
         counts[ans[j]]++;

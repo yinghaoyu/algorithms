@@ -1,7 +1,7 @@
-#include <memory.h>
 #include <iostream>
 #include <random>
 #include <unordered_set>
+#include <vector>
 
 using namespace std;
 
@@ -9,10 +9,10 @@ class CountOfRangeSum
 {
  public:
   // 通过改写归并排序，同sort/CountOfRangeSum.cc
-  static int countRangeSum1(int *nums, int len, int lower, int upper)
+  static int countRangeSum1(vector<int> &nums, int lower, int upper)
   {
-    int n = len;
-    long *sums = new long[n + 1]();
+    int n = nums.size();
+    vector<long> sums(n + 1);
     for (int i = 0; i < n; ++i)
     {
       // 前缀和
@@ -21,7 +21,7 @@ class CountOfRangeSum
     return countWhileMergeSort(sums, 0, n + 1, lower, upper);
   }
 
-  static int countWhileMergeSort(long *sums, int start, int end, int lower, int upper)
+  static int countWhileMergeSort(vector<long> &sums, int start, int end, int lower, int upper)
   {
     if (end - start <= 1)
     {
@@ -30,7 +30,7 @@ class CountOfRangeSum
     int mid = (start + end) / 2;
     int count = countWhileMergeSort(sums, start, mid, lower, upper) + countWhileMergeSort(sums, mid, end, lower, upper);
     int j = mid, k = mid, t = mid;
-    long *cache = new long[end - start]();
+    vector<long> cache(end - start);
     for (int i = start, r = 0; i < mid; ++i, ++r)
     {
       while (k < end && sums[k] - sums[i] < lower)
@@ -48,8 +48,8 @@ class CountOfRangeSum
       cache[r] = sums[i];
       count += j - k;
     }
-    memcpy(sums + start, cache, t - start);
-    delete[] cache;
+    std::copy(cache.begin(), cache.begin() + t - start, sums.begin() + start);
+    // 从cache数组为0的位置开始，复制到数组sums为start的位置，复制长度为t - start
     // System.arraycopy(cache, 0, sums, start, t - start);
     return count;
   }
@@ -219,7 +219,7 @@ class CountOfRangeSum
     long moreKeySize(long key) { return root != nullptr ? (root->all - lessKeySize(key + 1)) : 0; }
   };
 
-  static int countRangeSum2(int *nums, int len, int lower, int upper)
+  static int countRangeSum2(vector<int> &nums, int lower, int upper)
   {
     // 黑盒，加入数字（前缀和），不去重，可以接受重复数字
     // < num , 有几个数？
@@ -227,12 +227,12 @@ class CountOfRangeSum
     long sum = 0;
     int ans = 0;
     treeSet.add(0);  // 一个数都没有的时候，就已经有一个前缀和累加和为0，
-    for (int i = 0; i < len; i++)
+    for (int i = 0; i < nums.size(); i++)
     {
       sum += nums[i];
       // [sum - upper, sum - lower]
       // [10, 20] ?
-      // < 10 ?  < 21 ?▫▫▫
+      // < 10 ?  < 21 ?
       long a = treeSet.lessKeySize(sum - lower + 1);
       long b = treeSet.lessKeySize(sum - upper);
       ans += a - b;
@@ -242,9 +242,9 @@ class CountOfRangeSum
   }
 
   // for test
-  static void printArray(int *arr, int len)
+  static void printArray(vector<int> &arr)
   {
-    for (int i = 0; i < len; i++)
+    for (int i = 0; i < arr.size(); i++)
     {
       cout << arr[i] << " ";
     }
@@ -252,9 +252,9 @@ class CountOfRangeSum
   }
 
   // for test
-  static int *generateArray(int len, int varible)
+  static vector<int> generateArray(int len, int varible)
   {
-    int *arr = new int[len]();
+    vector<int> arr(len);
     for (int i = 0; i < len; i++)
     {
       arr[i] = getRandom(0, varible);
@@ -278,14 +278,14 @@ class CountOfRangeSum
     cout << "test begin" << endl;
     for (int i = 0; i < 10000; i++)
     {
-      int *test = generateArray(len, varible);
+      vector<int> test = generateArray(len, varible);
       int lower = getRandom(0, varible) - getRandom(0, varible);
       int upper = lower + getRandom(0, varible);
-      int ans1 = countRangeSum1(test, len, lower, upper);
-      int ans2 = countRangeSum2(test, len, lower, upper);
+      int ans1 = countRangeSum1(test, lower, upper);
+      int ans2 = countRangeSum2(test, lower, upper);
       if (ans1 != ans2)
       {
-        printArray(test, len);
+        printArray(test);
         cout << lower << endl;
         cout << upper << endl;
         cout << ans1 << endl;

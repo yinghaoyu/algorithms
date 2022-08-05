@@ -282,16 +282,16 @@ class SlidingWindowMedian
     bool operator!=(const Node &other) { return !(*this == other); }
   };
 
-  static double *medianSlidingWindow(int *nums, int len, int k)
+  static vector<double> medianSlidingWindow(vector<int> &nums, int k)
   {
     SizeBalancedTreeMap<Node> map;
     for (int i = 0; i < k - 1; i++)
     {
       map.add(Node(i, nums[i]));
     }
-    double *ans = new double[len - k + 1]();
+    vector<double> ans(nums.size() - k + 1);
     int index = 0;
-    for (int i = k - 1; i < len; i++)
+    for (int i = k - 1; i < nums.size(); i++)
     {
       map.add(Node(i, nums[i]));
       if (map.size() % 2 == 0)
@@ -313,11 +313,10 @@ class SlidingWindowMedian
 
 int main()
 {
-  int arr[] = {1, 2, 4, 3, 5, 6, 7, 8, 9};
-  int len = sizeof(arr) / sizeof(int);
+  vector<int> arr = {1, 2, 4, 3, 5, 6, 7, 8, 9};
   int wsize = 3;
-  double *res = SlidingWindowMedian::medianSlidingWindow(arr, len, wsize);
-  for (int i = 0; i < len - wsize + 1; i++)
+  vector<double> res = SlidingWindowMedian::medianSlidingWindow(arr, wsize);
+  for (int i = 0; i < arr.size() - wsize + 1; i++)
   {
     cout << res[i] << " ";
   }

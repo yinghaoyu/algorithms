@@ -9,24 +9,21 @@ using namespace std;
 // 不要提交这个类
 class DirectedGraphNode
 {
-public:
+ public:
   int label;
-  list<DirectedGraphNode*> neighbors;
+  list<DirectedGraphNode *> neighbors;
 
-  DirectedGraphNode(int x)
-  {
-    label = x;
-  }
+  DirectedGraphNode(int x) { label = x; }
 };
 
 // 提交下面的
 class Record
 {
-public:
-  DirectedGraphNode* node;
+ public:
+  DirectedGraphNode *node;
   long nodes;
 
-  Record(DirectedGraphNode* n, long o)
+  Record(DirectedGraphNode *n, long o)
   {
     node = n;
     nodes = o;
@@ -43,7 +40,7 @@ bool compare(Record o1, Record o2)
 // 缓存！！！！！order
 //  key : 某一个点的点次，之前算过了！
 //  value : 点次是多少
-Record f(DirectedGraphNode* cur, unordered_map<DirectedGraphNode*, Record> order)
+Record f(DirectedGraphNode *cur, unordered_map<DirectedGraphNode *, Record> order)
 {
   if (order.find(cur) != order.end())
   {
@@ -51,7 +48,7 @@ Record f(DirectedGraphNode* cur, unordered_map<DirectedGraphNode*, Record> order
   }
   // cur的点次之前没算过！
   long nodes = 0;
-  for (DirectedGraphNode* next : cur->neighbors)
+  for (DirectedGraphNode *next : cur->neighbors)
   {
     nodes += f(next, order).nodes;  // 这里统计的是累加，和计算节点最大深度异曲同工
   }
@@ -60,10 +57,10 @@ Record f(DirectedGraphNode* cur, unordered_map<DirectedGraphNode*, Record> order
   return ans;
 }
 
-list<DirectedGraphNode*> topSort(list<DirectedGraphNode*>& graph)
+list<DirectedGraphNode *> topSort(list<DirectedGraphNode *> &graph)
 {
-  unordered_map<DirectedGraphNode*, Record> order;
-  for (DirectedGraphNode* cur : graph)
+  unordered_map<DirectedGraphNode *, Record> order;
+  for (DirectedGraphNode *cur : graph)
   {
     f(cur, order);
   }
@@ -73,7 +70,7 @@ list<DirectedGraphNode*> topSort(list<DirectedGraphNode*>& graph)
     recordArr.push_back(r.second);
   }
   recordArr.sort(compare);
-  list<DirectedGraphNode*> ans;
+  list<DirectedGraphNode *> ans;
   for (auto r : recordArr)
   {
     ans.push_back(r.node);

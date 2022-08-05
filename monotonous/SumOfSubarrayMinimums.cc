@@ -33,12 +33,12 @@ class SumOfSubarrayMinimums
  public:
   // 暴力解，找到所有子数组的最小值，相加
   // 时间复杂度：O(N^3)
-  static int subArrayMinSum1(int *arr, int len)
+  static int subArrayMinSum1(vector<int> &arr)
   {
     int ans = 0;
-    for (int i = 0; i < len; i++)
+    for (int i = 0; i < arr.size(); i++)
     {
-      for (int j = i; j < len; j++)
+      for (int j = i; j < arr.size(); j++)
       {
         int min = arr[i];
         for (int k = i + 1; k <= j; k++)
@@ -53,12 +53,12 @@ class SumOfSubarrayMinimums
 
   // 没有用单调栈
   // 时间复杂度O(N^2)
-  static int subArrayMinSum2(int *arr, int len)
+  static int subArrayMinSum2(vector<int> &arr)
   {
-    int *left = leftNearLessEqual2(arr, len);
-    int *right = rightNearLess2(arr, len);
+    vector<int> left = leftNearLessEqual2(arr);
+    vector<int> right = rightNearLess2(arr);
     int ans = 0;
-    for (int i = 0; i < len; i++)
+    for (int i = 0; i < arr.size(); i++)
     {
       int start = i - left[i];
       int end = right[i] - i;
@@ -67,10 +67,10 @@ class SumOfSubarrayMinimums
     return ans;
   }
 
-  static int *leftNearLessEqual2(int *arr, int len)
+  static vector<int> leftNearLessEqual2(vector<int> &arr)
   {
-    int N = len;
-    int *left = new int[N]();
+    int N = arr.size();
+    vector<int> left(N);
     for (int i = 0; i < N; i++)
     {
       int ans = -1;
@@ -88,10 +88,10 @@ class SumOfSubarrayMinimums
     return left;
   }
 
-  static int *rightNearLess2(int *arr, int len)
+  static vector<int> rightNearLess2(vector<int> &arr)
   {
-    int N = len;
-    int *right = new int[N]();
+    int N = arr.size();
+    vector<int> right(N);
     for (int i = 0; i < N; i++)
     {
       int ans = N;
@@ -111,13 +111,13 @@ class SumOfSubarrayMinimums
 
   // 单调栈优化
   // 时间复杂度log(N)
-  static int sumSubarrayMins(int *arr, int len)
+  static int sumSubarrayMins(vector<int> &arr)
   {
-    int *stack = new int[len]();
-    int *left = nearLessEqualLeft(arr, stack, len);
-    int *right = nearLessRight(arr, stack, len);
+    vector<int> stack(arr.size());
+    vector<int> left = nearLessEqualLeft(arr, stack);
+    vector<int> right = nearLessRight(arr, stack);
     long ans = 0;
-    for (int i = 0; i < len; i++)
+    for (int i = 0; i < arr.size(); i++)
     {
       long start = i - left[i];
       long end = right[i] - i;
@@ -127,10 +127,10 @@ class SumOfSubarrayMinimums
     return (int) ans;
   }
 
-  static int *nearLessEqualLeft(int *arr, int *stack, int len)
+  static vector<int> nearLessEqualLeft(vector<int> &arr, vector<int> &stack)
   {
-    int N = len;
-    int *left = new int[N]();
+    int N = arr.size();
+    vector<int> left(N);
     int size = 0;
     // 从右往左
     for (int i = N - 1; i >= 0; i--)
@@ -149,10 +149,10 @@ class SumOfSubarrayMinimums
     return left;
   }
 
-  static int *nearLessRight(int *arr, int *stack, int len)
+  static vector<int> nearLessRight(vector<int> &arr, vector<int> &stack)
   {
-    int N = len;
-    int *right = new int[N]();
+    int N = arr.size();
+    vector<int> right(N);
     int size = 0;
     // 从左往右
     for (int i = 0; i < N; i++)
@@ -171,9 +171,9 @@ class SumOfSubarrayMinimums
     return right;
   }
 
-  static int *randomArray(int len, int maxValue)
+  static vector<int> randomArray(int len, int maxValue)
   {
-    int *ans = new int[len]();
+    vector<int> ans(len);
     for (int i = 0; i < len; i++)
     {
       ans[i] = getRandom(1, maxValue);
@@ -181,9 +181,9 @@ class SumOfSubarrayMinimums
     return ans;
   }
 
-  static void printArray(int *arr, int len)
+  static void printArray(vector<int> &arr)
   {
-    for (int i = 0; i < len; i++)
+    for (int i = 0; i < arr.size(); i++)
     {
       cout << arr[i] << " ";
     }
@@ -208,13 +208,13 @@ class SumOfSubarrayMinimums
     for (int i = 0; i < testTime; i++)
     {
       int len = getRandom(0, maxLen);
-      int *arr = randomArray(len, maxValue);
-      int ans1 = subArrayMinSum1(arr, len);
-      int ans2 = subArrayMinSum2(arr, len);
-      int ans3 = sumSubarrayMins(arr, len);
+      vector<int> arr = randomArray(len, maxValue);
+      int ans1 = subArrayMinSum1(arr);
+      int ans2 = subArrayMinSum2(arr);
+      int ans3 = sumSubarrayMins(arr);
       if (ans1 != ans2 || ans1 != ans3)
       {
-        printArray(arr, len);
+        printArray(arr);
         cout << ans1 << endl;
         cout << ans2 << endl;
         cout << ans3 << endl;

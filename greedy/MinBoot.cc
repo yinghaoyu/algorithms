@@ -70,4 +70,5 @@ class MinBoat
     int used = all - noUsed;
     int moreUnsolved = (N - all) - used;
     return used + ((noUsed + 1) >> 1) + moreUnsolved;
-  };
+  }
+};
