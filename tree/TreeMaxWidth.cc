@@ -1,15 +1,14 @@
-#include <iostream>
 #include <stdbool.h>
-#include <vector>
+#include <iostream>
 #include <queue>
-#include <unordered_map>
 #include <random>
+#include <unordered_map>
+#include <vector>
 
 #define MAX_SEED 1024
 #define HALF_SEED (MAX_SEED >> 1)
 
 using namespace std;
-
 
 //求二叉树最宽的层有多少个节点
 //
@@ -24,144 +23,138 @@ using namespace std;
 
 class TreeMaxWidth
 {
-  public:
-    class Node
-    {
-      public:
-        int value;
-        Node* left;
-        Node* right;
+ public:
+  class Node
+  {
+   public:
+    int value;
+    Node *left;
+    Node *right;
 
-        Node(int data)
-        {
-          this->value = data;
-        }
-    };
+    Node(int data) { this->value = data; }
+  };
 
-    static int getRandom(int min, int max)
+  static int getRandom(int min, int max)
+  {
+    random_device seed;                            // 硬件生成随机数种子
+    ranlux48 engine(seed());                       // 利用种子生成随机数引
+    uniform_int_distribution<> distrib(min, max);  // 设置随机数范围，并为均匀分布
+    int res = distrib(engine);                     // 随机数
+    return res;
+  }
+
+  static int maxWidthUseMap(Node *head)
+  {
+    if (head == nullptr)
     {
-      random_device seed;  // 硬件生成随机数种子
-      ranlux48 engine(seed());  // 利用种子生成随机数引
-      uniform_int_distribution<> distrib(min, max);  // 设置随机数范围，并为均匀分布
-      int res = distrib(engine);  // 随机数
-      return res;
+      return 0;
     }
-
-    static int maxWidthUseMap(Node* head)
+    queue<Node *> queue;
+    queue.push(head);
+    // key 在 哪一层，value
+    unordered_map<Node *, int> levelMap;
+    levelMap.emplace(head, 1);
+    int curLevel = 1;       // 当前你正在统计哪一层的宽度
+    int curLevelNodes = 0;  // 当前层curLevel层，宽度目前是多少
+    int max = 0;
+    while (!queue.empty())
     {
-      if (head == nullptr)
+      Node *cur = queue.front();
+      queue.pop();
+      int curNodeLevel = levelMap.at(cur);
+      if (cur->left != nullptr)
       {
-        return 0;
+        levelMap.emplace(cur->left, curNodeLevel + 1);
+        queue.push(cur->left);
       }
-      queue<Node*> queue;
-      queue.push(head);
-      // key 在 哪一层，value
-      unordered_map<Node*, int> levelMap;
-      levelMap.emplace(head, 1);
-      int curLevel = 1; // 当前你正在统计哪一层的宽度
-      int curLevelNodes = 0; // 当前层curLevel层，宽度目前是多少
-      int max = 0;
-      while (!queue.empty())
+      if (cur->right != nullptr)
       {
-        Node* cur = queue.front();
-        queue.pop();
-        int curNodeLevel = levelMap.at(cur);
-        if (cur->left != nullptr)
-        {
-          levelMap.emplace(cur->left, curNodeLevel + 1);
-          queue.push(cur->left);
-        }
-        if (cur->right != nullptr)
-        {
-          levelMap.emplace(cur->right, curNodeLevel + 1);
-          queue.push(cur->right);
-        }
-        if (curNodeLevel == curLevel)
-        {
-          curLevelNodes++;
-        }
-        else
-        {
-          max = std::max(max, curLevelNodes);
-          curLevel++;
-          curLevelNodes = 1;
-        }
+        levelMap.emplace(cur->right, curNodeLevel + 1);
+        queue.push(cur->right);
       }
-      max = std::max(max, curLevelNodes);
-      return max;
-    }
-
-    static int maxWidthNoMap(Node* head)
-    {
-      if (head == nullptr)
+      if (curNodeLevel == curLevel)
       {
-        return 0;
-      }
-      queue<Node*> queue;
-      queue.push(head);
-      Node* curEnd = head; // 当前层，最右节点是谁
-      Node* nextEnd = nullptr; // 下一层，最右节点是谁
-      int max = 0;
-      int curLevelNodes = 0; // 当前层的节点数
-      while (!queue.empty())
-      {
-        Node* cur = queue.front();
-        queue.pop();
-        if (cur->left != nullptr)
-        {
-          queue.emplace(cur->left);
-          nextEnd = cur->left;
-        }
-        if (cur->right != nullptr)
-        {
-          queue.emplace(cur->right);
-          nextEnd = cur->right;
-        }
         curLevelNodes++;
-        if (cur == curEnd)
-        {
-          max = std::max(max, curLevelNodes);
-          curLevelNodes = 0;
-          curEnd = nextEnd;
-        }
       }
-      return max;
-    }
-
-    // for test
-    static Node* generateRandomBST(int maxLevel, int maxValue)
-    {
-      return generate(1, maxLevel, maxValue);
-    }
-
-    // for test
-    static Node* generate(int level, int maxLevel, int maxValue)
-    {
-      if (level > maxLevel || getRandom(0, MAX_SEED) < HALF_SEED)
+      else
       {
-        return nullptr;
+        max = std::max(max, curLevelNodes);
+        curLevel++;
+        curLevelNodes = 1;
       }
-      Node* head = new Node(getRandom(0, maxValue));
-      head->left = generate(level + 1, maxLevel, maxValue);
-      head->right = generate(level + 1, maxLevel, maxValue);
-      return head;
     }
+    max = std::max(max, curLevelNodes);
+    return max;
+  }
 
-    static void test()
+  static int maxWidthNoMap(Node *head)
+  {
+    if (head == nullptr)
     {
-      int maxLevel = 10;
-      int maxValue = 100;
-      int testTimes = 10000;
-      for (int i = 0; i < testTimes; i++)
-      {
-        Node* head = generateRandomBST(maxLevel, maxValue);
-        if (maxWidthUseMap(head) != maxWidthNoMap(head))
-        {
-          cout << "Oops!" << endl;
-        }
-      }
-      cout << "finish!" << endl;
+      return 0;
     }
+    queue<Node *> queue;
+    queue.push(head);
+    Node *curEnd = head;      // 当前层，最右节点是谁
+    Node *nextEnd = nullptr;  // 下一层，最右节点是谁
+    int max = 0;
+    int curLevelNodes = 0;  // 当前层的节点数
+    while (!queue.empty())
+    {
+      Node *cur = queue.front();
+      queue.pop();
+      if (cur->left != nullptr)
+      {
+        queue.emplace(cur->left);
+        nextEnd = cur->left;
+      }
+      if (cur->right != nullptr)
+      {
+        queue.emplace(cur->right);
+        nextEnd = cur->right;
+      }
+      curLevelNodes++;
+      if (cur == curEnd)
+      {
+        max = std::max(max, curLevelNodes);
+        curLevelNodes = 0;
+        curEnd = nextEnd;
+      }
+    }
+    return max;
+  }
+
+  // for test
+  static Node *generateRandomBST(int maxLevel, int maxValue) { return generate(1, maxLevel, maxValue); }
+
+  // for test
+  static Node *generate(int level, int maxLevel, int maxValue)
+  {
+    if (level > maxLevel || getRandom(0, MAX_SEED) < HALF_SEED)
+    {
+      return nullptr;
+    }
+    Node *head = new Node(getRandom(0, maxValue));
+    head->left = generate(level + 1, maxLevel, maxValue);
+    head->right = generate(level + 1, maxLevel, maxValue);
+    return head;
+  }
+
+  static void test()
+  {
+    int maxLevel = 10;
+    int maxValue = 100;
+    int testTimes = 10000;
+    for (int i = 0; i < testTimes; i++)
+    {
+      Node *head = generateRandomBST(maxLevel, maxValue);
+      if (maxWidthUseMap(head) != maxWidthNoMap(head))
+      {
+        cout << "Oops!" << endl;
+      }
+    }
+    cout << "finish!" << endl;
+  }
 };
 
 int main()

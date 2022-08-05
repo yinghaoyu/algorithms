@@ -27,17 +27,17 @@ using TdArray = vector<vector<int>>;
 class PalindromeSubsequence
 {
  public:
-  static int lpsl1(string &s)
+  static int lpsl1(string str)
   {
-    if (s.length() == 0)
+    if (str.length() == 0)
     {
       return 0;
     }
-    return f(s, 0, s.length() - 1);
+    return f(str, 0, str.length() - 1);
   }
 
   // str[L..R]最长回文子序列长度返回
-  static int f(string &str, int L, int R)
+  static int f(string str, int L, int R)
   {
     if (L == R)  // 只有一个字符
     {
@@ -54,7 +54,7 @@ class PalindromeSubsequence
     return std::max(std::max(p1, p2), std::max(p3, p4));
   }
 
-  static int lpsl2(string &str)
+  static int lpsl2(string str)
   {
     if (str.length() == 0)
     {
@@ -108,6 +108,7 @@ class PalindromeSubsequence
     int N = str1.length();
     int M = str2.length();
     TdArray dp(N, vector<int>(M));
+    // dp[i][j]表示任取str1[0...i]，能组成str2[0...j]公共长度的方法数
     // base case
     // str1[0:i]  str2[0:j] 都只有一个字符，相等就长度为1
     dp[0][0] = str1[0] == str2[0] ? 1 : 0;
