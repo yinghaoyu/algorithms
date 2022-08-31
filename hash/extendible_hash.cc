@@ -119,7 +119,6 @@ void ExtendibleHash<K, V>::Insert(const K &key, const V &value)
 
   // 设localDepth_为 m， 可以理解为实际扩容了 m 次，每次扩容都是原来的2倍
   // 说明在 2 ^ n 个的 bucket address内，实际上有 2 ^ ( n - m ) 个bucket address指向的是同一块bucket
-
   // 当 m == n 时，说明每个bucket address都指向唯一的一块bucket
   while (targetBucket->items.size() == bucketMaxSize_)
   {
