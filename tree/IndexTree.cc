@@ -49,7 +49,7 @@ class NumArray
   // 这里的区间为[left, right]，包含了A[left]的值
   int sumRange(int left, int right)
   {
-    // 等价于 query(right+1) - query(left+1) + A[left];
+    // 等价于 query(right+1) - query(left+1) + A[left + 1];
     return query(right + 1) - query(left);
   }
 };
