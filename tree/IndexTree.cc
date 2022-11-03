@@ -3,54 +3,55 @@
 using namespace std;
 
 // leetcode第307题
-class NumArray {
-public:
-    vector<int> A;  // 原数组
-    vector<int> C;  // 树状数组
+class NumArray
+{
+ public:
+  vector<int> A;  // 原数组
+  vector<int> C;  // 树状数组
 
-    int lowBit(int x)
+  int lowBit(int x) { return x & (-x); }
+
+  void add(int index, int u)
+  {
+    for (int i = index; i < C.size(); i += lowBit(i))
     {
-      return x & (-x);
+      C[i] += u;
     }
+  }
 
-    void add(int index, int u)
+  int query(int index)
+  {
+    int sum = 0;
+    for (int i = index; i > 0; i -= lowBit(i))
     {
-      for(int i = index; i < C.size(); i += lowBit(i))
-      {
-        C[i] += u;
-      }
+      sum += C[i];
     }
+    return sum;
+  }
 
-    int query(int index)
+  NumArray(vector<int> &nums) : A(nums)
+  {
+    // 树状数组下标从1开始，防止lowBit结果为0，导致不能退出for循环
+    C = vector<int>(A.size() + 1, 0);
+    for (int i = 0; i < A.size(); i++)
     {
-      int sum = 0;
-      for(int i = index; i > 0; i -= lowBit(i))
-      {
-        sum += C[i];
-      }
-      return sum;
+      add(i + 1, A[i]);
     }
+  }
 
-    NumArray(vector<int>& nums):A(nums) {
-      // 树状数组下标从1开始，防止lowBit结果为0，导致不能退出for循环
-      C = vector<int>(A.size() + 1 , 0);
-      for(int i = 0; i < A.size(); i++)
-      {
-        add(i+1, A[i]);
-      }
-    }
+  void update(int index, int val)
+  {
+    int diff = val - A[index];
+    add(index + 1, diff);
+    A[index] = val;
+  }
 
-    void update(int index, int val) {
-      int diff = val - A[index];
-      add(index+1, diff);
-      A[index] = val;
-    }
-
-    // 这里的区间为[left, right]，包含了A[left]的值
-    int sumRange(int left, int right) {
-      // 等价于 query(right+1) - query(left+1) + A[left];
-      return query(right+1) - query(left);
-    }
+  // 这里的区间为[left, right]，包含了A[left]的值
+  int sumRange(int left, int right)
+  {
+    // 等价于 query(right+1) - query(left+1) + A[left + 1];
+    return query(right + 1) - query(left);
+  }
 };
 
 /**
@@ -64,16 +65,16 @@ public:
 // 下标从1开始！
 class IndexTree
 {
-  private:
-    int* tree;
-    int N;
+ private:
+  vector<int> tree;
+  int N;
 
-  public:
+ public:
   // 0位置弃而不用！
   IndexTree(int size)
   {
     N = size;
-    tree = new int[N + 1];
+    tree = vector<int>(N + 1);
   }
 
   // 1~index 累加和是多少？

@@ -27,10 +27,10 @@ Node *reverseLinkedList(Node *head)
   Node *next = nullptr;
   while (head != nullptr)
   {
-    next = head->next;
-    head->next = pre;
-    pre = head;
-    head = next;
+    next = head->next;  // 先记录next节点
+    head->next = pre;   // 当前节点的next改为pre
+    pre = head;         // 记录 pre
+    head = next;        // head往后走
   }
   return pre;
 }

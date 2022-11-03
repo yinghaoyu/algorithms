@@ -157,8 +157,9 @@ void ExtendibleHash<K, V>::Insert(const K &key, const V &value)
     {
       if (bucketTable_[i] == targetBucket)
       {
-        // 原本i & mask 为
-        // 根据localDepth_的mask，释放原有的targetBucket
+        // 假设原来bucket编号为0101，2倍扩容后另一个镜像的bucket编号为1101（即最高位是1，第1 << localDepth位）
+        // 因此这里找另个镜像bucket编号可以用
+        // i ^ (1 << localDepth)
         if (i & mask)
         {
           bucketTable_[i] = oneBucket;

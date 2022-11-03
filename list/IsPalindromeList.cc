@@ -87,59 +87,55 @@ class IsPalindromeList
     return true;
   }
 
+  static Node *reverse(Node *head)
+  {
+    Node *pre = NULL;
+    Node *next = NULL;
+    while (head != NULL)
+    {
+      next = head->next;
+      head->next = pre;
+      pre = head;
+      head = next;
+    }
+    return pre;
+  }
+
   // need O(1) extra space
   static bool isPalindrome3(Node *head)
   {
-    if (head == nullptr || head->next == nullptr)
+    if (head == NULL || head->next == NULL)
     {
       return true;
     }
-
-    Node *n1 = head;
-    Node *n2 = head;
-    while (n2->next != nullptr && n2->next->next != nullptr)
+    Node *slow = head;
+    Node *fast = head;
+    Node *tmp = NULL;
+    while (fast->next != NULL && fast->next->next != NULL)
     {
-      // find mid node
-      n1 = n1->next;        // n1 -> mid
-      n2 = n2->next->next;  // n2 -> end
+      slow = slow->next;
+      fast = fast->next->next;
     }
-    // n1 中点 1 2 3 2 1被分为1 --> 2 --> 3和3 <-- 2 <-- 1
-    n2 = n1->next;       // n2 -> right part first node
-    n1->next = nullptr;  // mid.next -> nullptr 左右链表截断
-    Node *n3 = nullptr;
-    while (n2 != nullptr)
-    {
-      // right part convert
-      n3 = n2->next;  // n3 -> save next node
-      n2->next = n1;  // next of right node convert
-      n1 = n2;        // n1 move
-      n2 = n3;        // n2 move
-    }
-    n3 = n1;    // n3 -> save last node
-    n2 = head;  // n2 -> left first node
+    // 奇数移动到中点，偶数移动到下中点
+    tmp = slow->next;
+    // 左右两边断开链表
+    slow->next = NULL;
+    Node *r = reverse(tmp);
+    tmp = r;
     bool res = true;
-    while (n1 != nullptr && n2 != nullptr)
+    while (head != NULL && tmp != NULL)
     {
-      // check palindrome
-      if (n1->value != n2->value)
+      if (head->value != tmp->value)
       {
         res = false;
         break;
       }
-      n1 = n1->next;  // left to mid
-      n2 = n2->next;  // right to mid
+      head = head->next;
+      tmp = tmp->next;
     }
-    // recover
-    n1 = n3->next;
-    n3->next = nullptr;  // last node point to nullptr
-    while (n1 != nullptr)
-    {
-      // recover list
-      n2 = n1->next;
-      n1->next = n3;
-      n3 = n1;
-      n1 = n2;
-    }
+    r = reverse(r);
+    // 恢复链表
+    slow->next = r;
     return res;
   }
 
