@@ -93,6 +93,10 @@ class PavingTile
     return ans;
   }
 
+  // 根据上一行的状态，得到当前行的状态
+  // 例如：
+  // 上一行pre[i] == 1 表示横摆，则当前行cur[i] = 0，表示当前列既可以采用横摆，也可以采用竖摆
+  // 上一行pre[i] == 0 表示竖摆，则当前行cur[i] = 1，表示当前列只能竖摆
   static vector<int> getOp(vector<int> &pre)
   {
     vector<int> cur(pre.size());
