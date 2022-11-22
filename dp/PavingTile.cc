@@ -6,6 +6,7 @@ using namespace std;
 
 using TdArray = vector<vector<int>>;
 
+// 蒙德里安的梦想
 // 问题描述：
 // 在一个N行M列的格子里，现有1*2大小的瓷砖，可以横着或者竖着铺。问一共有多少种方案，可以将整个N*M的空间都填满。
 
@@ -22,6 +23,7 @@ class PavingTile
     {
       return 0;
     }
+    // 只有一行，或者只有一列
     if (N == 1 || M == 1)
     {
       return 1;
@@ -46,15 +48,21 @@ class PavingTile
       // base case
       for (int i = 0; i < pre.size(); i++)
       {
+        // level == N 刚好越界了
+        // 这时pre[i]表示的是最后一行第i列的情况
         if (pre[i] == 0)
         {
-          return 0;  // 最后一行想竖着摆，那么不好意思，没有下一行了返回0种方案
+          // 最后一行第i列想竖着摆
+          // 那么不好意思，没有下一行了返回0种方案
+          return 0;
         }
       }
-      return 1;  // 最后一行全横摆，那么只有1种方案
+      // 最后一行全横摆，那么只有1种方案
+      return 1;
     }
 
     // 没到终止行，可以选择在当前的level行摆瓷砖
+    // op是当前行的状态
     vector<int> op = getOp(pre);
     return dfs(op, 0, level, N);
   }
@@ -64,10 +72,10 @@ class PavingTile
   // dfs针对每一列，process针对每一行
   static int dfs(vector<int> &op, int col, int level, int N)
   {
-    // 在列上自由发挥，玩深度优先遍历，当col来到终止列，i行的决定做完了
-    // 轮到i+1行，做决定
     if (col == op.size())
     {
+      // 在列上自由发挥，玩深度优先遍历，当col来到终止列，i行的决定做完了
+      // 轮到i+1行，做决定
       return process(op, level + 1, N);
     }
     int ans = 0;
