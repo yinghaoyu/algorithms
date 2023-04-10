@@ -27,10 +27,10 @@ class StoneMerge
 {
  public:
   // 计算前缀和
-  static int *sum(int *arr, int len)
+  static vector<int> sum(vector<int> &arr)
   {
-    int N = len;
-    int *s = new int[N + 1]();
+    int N = arr.size();
+    vector<int> s(N + 1);
     s[0] = 0;
     for (int i = 0; i < N; i++)
     {
@@ -40,20 +40,19 @@ class StoneMerge
   }
 
   // 返回arr[l..r]的区间和
-  static int w(int *s, int l, int r) { return s[r + 1] - s[l]; }
+  static int w(vector<int> &s, int l, int r) { return s[r + 1] - s[l]; }
 
-  static int min1(int *arr, int len)
+  static int min1(vector<int> &arr)
   {
-    if (arr == nullptr || len < 2)
+    if (arr.size() < 2)
     {
       return 0;
     }
-    int N = len;
-    int *s = sum(arr, len);
-    return process1(0, N - 1, s);
+    vector<int> s = sum(arr);
+    return process1(0, arr.size() - 1, s);
   }
 
-  static int process1(int L, int R, int *s)
+  static int process1(int L, int R, vector<int> &s)
   {
     if (L == R)
     {
@@ -80,14 +79,14 @@ class StoneMerge
   //  2  ×  ×  0  ?      -->   2  ×  ×  0  20
   //  3  ×  ×  ×  0            3  ×  ×  ×  0
   //  L                        L
-  static int min2(int *arr, int len)
+  static int min2(vector<int> &arr)
   {
-    if (arr == nullptr || len < 2)
+    if (arr.size() < 2)
     {
       return 0;
     }
-    int N = len;
-    int *s = sum(arr, len);
+    int N = arr.size();
+    vector<int> s = sum(arr);
     TdArray dp(N, vector<int>(N));
     // dp[i][i] = 0 // base case
     // 根据递归的状态从下往上，从左往右填
@@ -108,14 +107,14 @@ class StoneMerge
   }
 
   // 四边形不等式优化dp
-  static int min3(int *arr, int len)
+  static int min3(vector<int> &arr)
   {
-    if (arr == nullptr || len < 2)
+    if (arr.size() < 2)
     {
       return 0;
     }
-    int N = len;
-    int *s = sum(arr, len);
+    int N = arr.size();
+    vector<int> s = sum(arr);
     TdArray dp(N, vector<int>(N));
     // 得到dp[L][R]的最优划分点记录在best里
     TdArray best(N, vector<int>(N));
@@ -146,9 +145,9 @@ class StoneMerge
     return dp[0][N - 1];
   }
 
-  static int *randomArray(int len, int maxValue)
+  static vector<int> randomArray(int len, int maxValue)
   {
-    int *arr = new int[len]();
+    vector<int> arr(len);
     for (int i = 0; i < len; i++)
     {
       arr[i] = getRandom(0, maxValue);
@@ -174,10 +173,10 @@ class StoneMerge
     for (int i = 0; i < testTime; i++)
     {
       int len = getRandom(0, N);
-      int *arr = randomArray(len, maxValue);
-      int ans1 = min1(arr, len);
-      int ans2 = min2(arr, len);
-      int ans3 = min3(arr, len);
+      vector<int> arr = randomArray(len, maxValue);
+      int ans1 = min1(arr);
+      int ans2 = min2(arr);
+      int ans3 = min3(arr);
       if (ans1 != ans2 || ans1 != ans3)
       {
         cout << "Oops!" << endl;
