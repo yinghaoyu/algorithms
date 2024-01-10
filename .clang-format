@@ -6,5 +6,4 @@ BasedOnStyle: Chromium
 ColumnLimit: 160
 DerivePointerAlignment: false
 IndentCaseLabels: false
-PointerAlignment: Right
 SpaceAfterCStyleCast: true
