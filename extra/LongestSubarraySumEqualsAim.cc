@@ -1,4 +1,4 @@
-#include <map>
+#include <unordered_map>
 #include <vector>
 
 using namespace std;
@@ -14,7 +14,7 @@ class LongestSubarraySumEqualsAim
  public:
   int compute(vector<int>& arr, int aim)
   {
-    map<int, int> m;
+    unordered_map<int, int> m;
     // 0这个前缀和，一个数字也没有的时候，就存在了
     m[0] = -1;
     int ans = 0;
