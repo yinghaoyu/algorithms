@@ -5,6 +5,7 @@ using namespace std;
 // 一开始1~n范围上的数字都是0，一共有m个操作，每次操作为(l,r,s,e,d)
 // 表示在l~r范围上依次加上首项为s、末项为e、公差为d的数列
 // m个操作做完之后，统计1~n范围上所有数字的最大值和异或和
+// 测试链接 : https://www.luogu.com.cn/problem/P4231
 class ArithmeticSequenceDifference
 {
  public:
