@@ -6,6 +6,9 @@ using namespace std;
 // 表示在l~r范围上依次加上首项为s、末项为e、公差为d的数列
 // m个操作做完之后，统计1~n范围上所有数字的最大值和异或和
 // 测试链接 : https://www.luogu.com.cn/problem/P4231
+
+// 等差數列差分
+// @sa https://www.bilibili.com/video/BV1Gp4y1E7Jp/
 class ArithmeticSequenceDifference
 {
  public:
