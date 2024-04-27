@@ -16,10 +16,12 @@ using TdArray = vector<vector<int>>;
 // 而且最后要回到原来出发的城市。
 // 路径的选择目标是要求得的路径路程为所有路径之中的最小值。
 
+// 状压dp
+// https://www.bilibili.com/video/BV15a4y1o7NA/
 class TSP
 {
  public:
-  static int t1(TdArray &matrix)
+  static int t1(TdArray& matrix)
   {
     int N = matrix.size();  // 0...N-1
     // set
@@ -37,7 +39,7 @@ class TSP
   // set中表示着哪些城市的集合，
   // start这座城一定在set里，
   // 从start出发，要把set中所有的城市过一遍，最终回到0这座城市，最小距离是多少
-  static int func1(TdArray &matrix, unordered_map<int, int> &set, int start)
+  static int func1(TdArray& matrix, unordered_map<int, int>& set, int start)
   {
     int cityNum = 0;
     for (int i = 0; i < set.size(); i++)
@@ -67,7 +69,7 @@ class TSP
     return min;
   }
 
-  static int t2(TdArray &matrix)
+  static int t2(TdArray& matrix)
   {
     int N = matrix.size();  // 0...N-1
     // 7座城 1111111
@@ -79,7 +81,7 @@ class TSP
   // set中表示着哪些城市的集合，
   // start这座城一定在set里，
   // 从start出发，要把set中所有的城市过一遍，最终回到0这座城市，最小距离是多少
-  static int f2(TdArray &matrix, int cityStatus, int start)
+  static int f2(TdArray& matrix, int cityStatus, int start)
   {
     if (cityStatus == (cityStatus & (~cityStatus + 1)))  // lowBit
     {
@@ -102,7 +104,7 @@ class TSP
     return min;
   }
 
-  static int t3(TdArray &matrix)
+  static int t3(TdArray& matrix)
   {
     int N = matrix.size();  // 0...N-1
     // 7座城 1111111
@@ -122,7 +124,7 @@ class TSP
   // set中表示着哪些城市的集合，
   // start这座城一定在set里，
   // 从start出发，要把set中所有的城市过一遍，最终回到0这座城市，最小距离是多少
-  static int f3(TdArray &matrix, int cityStatus, int start, TdArray &dp)
+  static int f3(TdArray& matrix, int cityStatus, int start, TdArray& dp)
   {
     if (dp[cityStatus][start] != -1)
     {
@@ -152,7 +154,7 @@ class TSP
     return dp[cityStatus][start];
   }
 
-  static int t4(TdArray &matrix)
+  static int t4(TdArray& matrix)
   {
     int N = matrix.size();  // 0...N-1
     int statusNums = 1 << N;
@@ -191,7 +193,7 @@ class TSP
   }
 
   // matrix[i][j] -> i城市到j城市的距离
-  static int tsp1(TdArray &matrix, int origin)
+  static int tsp1(TdArray& matrix, int origin)
   {
     if (matrix.size() < 2 || origin < 0 || origin >= matrix.size())
     {
@@ -215,7 +217,7 @@ class TSP
   // origin 固定参数，唯一的目标
   // cities 要考虑的集合，一定不含有origin
   // 当前来到的城市是谁，cur
-  static int process(TdArray &matrix, int aim, unordered_map<int, int> &cities, int cur)
+  static int process(TdArray& matrix, int aim, unordered_map<int, int>& cities, int cur)
   {
     bool hasCity = false;  // 集团中还是否有城市
     int ans = INT32_MAX;
@@ -235,7 +237,7 @@ class TSP
 
   // cities 里，一定含有cur这座城
   // 解决的是，集合从cur出发，通过集合里所有的城市，最终来到aim，最短距离
-  static int process2(TdArray &matrix, int aim, unordered_map<int, int> &cities, int cur)
+  static int process2(TdArray& matrix, int aim, unordered_map<int, int>& cities, int cur)
   {
     if (cities.size() == 1)
     {
@@ -255,7 +257,7 @@ class TSP
     return ans;
   }
 
-  static int tsp2(TdArray &matrix, int origin)
+  static int tsp2(TdArray& matrix, int origin)
   {
     if (matrix.size() < 2 || origin < 0 || origin >= matrix.size())
     {
