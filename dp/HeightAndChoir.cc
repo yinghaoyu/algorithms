@@ -6,6 +6,7 @@ using namespace std;
 
 // 合唱队
 // 测试链接 : https://www.luogu.com.cn/problem/P3205
+// @sa https://www.bilibili.com/video/BV1du4y1L7gy/
 class HeightAndChoir
 {
  public:
