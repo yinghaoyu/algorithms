@@ -1,161 +1,87 @@
-#include <deque>
+#include <algorithm>
 #include <iostream>
-#include <list>
-#include <queue>
-#include <unordered_map>
-#include <unordered_set>
 #include <vector>
 
 // 克鲁斯卡尔最小生成树
 // 算法思想：使用并查集
-//（1）总是从权值最小的边开始找，依次找权值依次变大的边（权值相等任选其一）
-//（2）如果当前的边进入最小生成树的集合中不会形成环，就要当前边；否则舍弃
-//（3）找完所有边之后，最小生成树的集合也就得到了
+// （1）总是从权值最小的边开始找，依次找权值依次变大的边（权值相等任选其一）
+// （2）如果当前的边进入最小生成树的集合中不会形成环，就要当前边；否则舍弃
+// （3）找完所有边之后，最小生成树的集合也就得到了
 
 using namespace std;
 
-class Node;
-class Edge
-{
- public:
-  int weight;  // 边的权重
-  Node *from;  // 边的起点
-  Node *to;    // 边的终点
-
-  Edge(int weight, Node *from, Node *to)
-  {
-    this->weight = weight;
-    this->from = from;
-    this->to = to;
-  }
-
-  bool operator<(const Edge &other)  // 小根堆的比较方式
-  {
-    return this->weight < other.weight;
-  }
-};
-
-// 点结构的描述
-class Node
-{
- public:
-  int value;           // 节点带的值
-  int in;              // 入度
-  int out;             // 出度
-  list<Node *> nexts;  // 可达的节点
-  list<Edge *> edges;  // 关联的边
-
-  Node(int value)
-  {
-    this->value = value;
-    in = 0;
-    out = 0;
-  }
-};
-
-class Graph
-{
- public:
-  unordered_map<int, Node *> nodes;  // 所有点集合
-  unordered_set<Edge *> edges;       // 所有边集合
-};
-// Union-Find Set
-class UnionFind
+class Kruskal
 {
  private:
-  // key 某一个节点， value key节点往上的节点
-  unordered_map<Node *, Node *> fatherMap;
-  // key 某一个集合的代表节点, value key所在集合的节点个数
-  unordered_map<Node *, int> sizeMap;
+  static const int MAXN = 5001;
 
- public:
-  void makeSets(list<Node *> &nodes)
+  static const int MAXM = 200001;
+
+  vector<int> father = vector<int>(MAXM);
+
+  // u, v, w
+  vector<vector<int>> edges = vector<vector<int>>(MAXM, vector<int>(3));
+
+  int n, m;
+
+  void build()
   {
-    fatherMap.clear();
-    sizeMap.clear();
-    for (auto node : nodes)
+    for (int i = 1; i <= n; i++)
     {
-      fatherMap[node] = node;  // 初始时指定node的父节点是自己
-      sizeMap[node] = 1;       // 节点所在的集合默认为1
+      father[i] = i;
     }
   }
 
-  Node *findFather(Node *n)
+  int find(int i)
   {
-    vector<Node *> path;  // 栈
-    while (n != fatherMap.at(n))
+    if (i != father[i])
     {
-      path.push_back(n);
-      n = fatherMap.at(n);
+      father[i] = find(father[i]);
     }
-    while (!path.empty())
-    {
-      Node *temp = path.back();
-      path.pop_back();
-      fatherMap[temp] = n;  // 缩短路径
-    }
-    return n;
+    return father[i];
   }
 
-  bool isSameSet(Node *a, Node *b) { return findFather(a) == findFather(b); }
-
-  // 并查集unions
-  void unions(Node *a, Node *b)
+  // 如果x和y本来就是一个集合，返回false
+  // 如果x和y不是一个集合，合并之后返回true
+  bool unions(int x, int y)
   {
-    if (a == nullptr || b == nullptr)
+    int fx = find(x);
+    int fy = find(y);
+    if (fx != fy)
     {
-      return;
+      father[fx] = fy;
+      return true;
     }
-    Node *aDai = findFather(a);
-    Node *bDai = findFather(b);
-    if (aDai != bDai)  // 集合元素多的吞并少的
+    else
     {
-      int aSetSize = sizeMap.at(aDai);
-      int bSetSize = sizeMap.at(bDai);
-      if (aSetSize <= bSetSize)
+      return false;
+    }
+  }
+
+  void test()
+  {
+    // 根据边的大小排序
+    std::sort(edges.begin(), edges.begin() + m, [](auto& a, auto& b) { return a[2] < b[2]; });
+    int ans = 0;
+    int edgeCnt = 0;
+    for (auto& edge : edges)
+    {
+      // 依次从小到大筛选边，看看是否在同一集合内
+      if (unions(edge[0], edge[1]))
       {
-        fatherMap[aDai] = bDai;
-        sizeMap[bDai] = aSetSize + bSetSize;
-        sizeMap.erase(aDai);
+        // 只要不在集合内的邻接点，就可以选择这条边
+        edgeCnt++;
+        ans += edge[2];
       }
-      else
-      {
-        fatherMap[bDai] = aDai;
-        sizeMap[aDai] = aSetSize + bSetSize;
-        sizeMap.erase(bDai);
-      }
+    }
+    if (edgeCnt == n - 1)
+    {
+      // 最小生成树一定是n-1条边
+      cout << edgeCnt << endl;
+    }
+    else
+    {
+      cout << "orz" << endl;
     }
   }
 };
-
-unordered_set<Edge *> kruskalMST(Graph graph)
-{
-  UnionFind unionFind;
-  list<Node *> collect;
-  for (auto node : graph.nodes)  // 先获取所有节点
-  {
-    collect.push_back(node.second);
-  }
-  unionFind.makeSets(collect);  // 初始化节点
-  // 从小的边到大的边，依次弹出，小根堆！
-  priority_queue<Edge *> priorityQueue;
-  for (Edge *edge : graph.edges)
-  {
-    // M 条边
-    priorityQueue.emplace(edge);  // O(logM)
-  }
-  unordered_set<Edge *> result;
-  while (!priorityQueue.empty())
-  {
-    // M 条边
-    Edge *edge = priorityQueue.top();  // O(logM)
-    priorityQueue.pop();
-    if (!unionFind.isSameSet(edge->from, edge->to))  // 不会形成环
-    {
-      // O(1)
-      result.emplace(edge);
-      unionFind.unions(edge->from, edge->to);
-    }
-  }
-  return result;
-}
