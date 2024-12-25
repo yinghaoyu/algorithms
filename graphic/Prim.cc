@@ -1,152 +1,162 @@
-#include <deque>
-#include <iostream>
-#include <list>
-#include <queue>
-#include <unordered_map>
-#include <unordered_set>
+#include <algorithm>
 #include <vector>
 
 // 普里姆最小生成树
 // 算法思想：
-//（1）可以从任意节点出发来寻找最小生成树
-//（2）某个点加入到被选取的点中后，解锁这个点出发的所有新边
-//（3）在所有解锁的边中选最小的边，然后看这个边加入到被解锁的点中后会不会形成环
-//（4）如果会，舍弃当前边，返回第3步；如果不会，保留当前边，将该边的指向点解锁，此边加入到结果中，返回第2步
-//（5）当所有点都被解锁时，最小生成树就得到了
+// （1）可以从任意节点出发来寻找最小生成树
+// （2）某个点加入到被选取的点中后，解锁这个点出发的所有新边
+// （3）在所有解锁的边中选最小的边，然后看这个边加入到被解锁的点中后会不会形成环
+// （4）如果会，舍弃当前边，返回第3步；如果不会，保留当前边，将该边的指向点解锁，此边加入到结果中，返回第2步
+// （5）当所有点都被解锁时，最小生成树就得到了
 
+// @sa https://www.bilibili.com/video/BV1sK4y1F7LH/
 using namespace std;
-using TdArray = vector<vector<int>>;
 
-class Node;
-class Edge
+class PrimStatic
 {
- public:
-  int weight;  // 边的权重
-  Node *from;  // 边的起点
-  Node *to;    // 边的终点
+ private:
+  const static int MAXN = 5001;
+  const static int MAXM = 400001;
+  int n, m;
 
-  Edge(int weight, Node *from, Node *to)
+  // 链式前向星建图
+  vector<int> head = vector<int>(MAXN);
+
+  vector<int> next = vector<int>(MAXM);
+
+  vector<int> to = vector<int>(MAXM);
+
+  vector<int> weight = vector<int>(MAXM);
+
+  int cnt;
+
+  // 改写的堆结构
+  vector<vector<int>> heap = vector<vector<int>>(MAXN, vector<int>(2));
+
+  // where[v] = -1，表示v这个节点，从来没有进入过堆
+  // where[v] = -2，表示v这个节点，已经弹出过了
+  // where[v] = i(>=0)，表示v这个节点，在堆上的i位置
+  vector<int> where = vector<int>(MAXN);
+
+  // 堆的大小
+  int heapSize;
+
+  // 找到的节点个数
+  int nodeCnt;
+
+  void build()
   {
-    this->weight = weight;
-    this->from = from;
-    this->to = to;
+    cnt = 1;
+    heapSize = 0;
+    nodeCnt = 0;
+    std::fill(heap.begin() + 1, heap.begin() + n + 1, 0);
+    std::fill(where.begin() + 1, where.begin() + n + 1, -1);
   }
 
-  bool operator<(const Edge &other)  // 小根堆的比较方式
+  void addEdge(int u, int v, int w)
   {
-    return this->weight < other.weight;
+    next[cnt] = head[u];
+    to[cnt] = v;
+    weight[cnt] = w;
+    head[u] = cnt++;
+  }
+
+  // 当前处理的是编号为ei的边！
+  void addOrUpdateOrIgnore(int ei)
+  {
+    int v = to[ei];
+    int w = weight[ei];
+    // 去往v点，权重w
+    if (where[v] == -1)
+    {
+      // v这个点，从来没有进入过堆！
+      heap[heapSize][0] = v;
+      heap[heapSize][1] = w;
+      where[v] = heapSize++;
+      heapInsert(where[v]);
+    }
+    else if (where[v] >= 0)
+    {
+      // v这个点的记录，在堆上的位置是where[v]
+      heap[where[v]][1] = std::min(heap[where[v]][1], w);
+      heapInsert(where[v]);
+    }
+  }
+
+  void heapInsert(int i)
+  {
+    while (heap[i][1] < heap[(i - 1) / 2][1])
+    {
+      swap(i, (i - 1) / 2);
+      i = (i - 1) / 2;
+    }
+  }
+
+  int u;
+
+  int w;
+
+  // 堆顶的记录：节点 -> u、到节点的花费 -> w
+  void pop()
+  {
+    u = heap[0][0];
+    w = heap[0][1];
+    swap(0, --heapSize);
+    heapify(0);
+    where[u] = -2;
+    nodeCnt++;
+  }
+
+  void heapify(int i)
+  {
+    int l = i * 2 + 1;
+    while (l < heapSize)
+    {
+      int best = l + 1 < heapSize && heap[l + 1][1] < heap[l][1] ? l + 1 : l;
+      best = heap[best][1] < heap[i][1] ? best : i;
+      if (best == i)
+      {
+        break;
+      }
+      swap(best, i);
+      i = best;
+      l = i * 2 + 1;
+    }
+  }
+
+  bool isEmpty() { return heapSize == 0; }
+
+  // 堆上，i位置的信息 和 j位置的信息 交换！
+  void swap(int i, int j)
+  {
+    int a = heap[i][0];
+    int b = heap[j][0];
+    where[a] = j;
+    where[b] = i;
+    vector<int> tmp = std::move(heap[i]);
+    heap[i] = heap[j];
+    heap[j] = tmp;
+  }
+
+  int prim()
+  {
+    // 1节点出发
+    nodeCnt = 1;
+    where[1] = -2;
+    for (int ei = head[1]; ei > 0; ei = next[ei])
+    {
+      addOrUpdateOrIgnore(ei);
+    }
+    int ans = 0;
+    while (!isEmpty())
+    {
+      pop();
+      ans += w;
+      for (int ei = head[u]; ei > 0; ei = next[ei])
+      {
+        addOrUpdateOrIgnore(ei);
+      }
+    }
+    return ans;
   }
 };
-
-// 点结构的描述
-class Node
-{
- public:
-  int value;           // 节点带的值
-  int in;              // 入度
-  int out;             // 出度
-  list<Node *> nexts;  // 可达的节点
-  list<Edge *> edges;  // 关联的边
-
-  Node(int value)
-  {
-    this->value = value;
-    in = 0;
-    out = 0;
-  }
-};
-
-class Graph
-{
- public:
-  unordered_map<int, Node *> nodes;  // 所有点集合
-  unordered_set<Edge *> edges;       // 所有边集合
-};
-
-unordered_set<Edge *> primMST(Graph graph)
-{
-  // 解锁的边进入小根堆
-  priority_queue<Edge *> priorityQueue;
-
-  // 哪些点被解锁出来了
-  unordered_set<Node *> nodeSet;
-
-  unordered_set<Edge *> result;  // 依次挑选的的边在result里
-
-  for (auto node : graph.nodes)
-  {
-    // 随便挑了一个点
-    // node 是开始点
-    Node *cur = node.second;
-    if (nodeSet.find(cur) == nodeSet.end())
-    {
-      nodeSet.emplace(cur);
-      for (Edge *edge : cur->edges)
-      {
-        // 由一个点，解锁所有相连的边
-        priorityQueue.push(edge);
-      }
-      while (!priorityQueue.empty())
-      {
-        Edge *edge = priorityQueue.top();  // 弹出解锁的边中，最小的边
-        priorityQueue.pop();
-        Node *toNode = edge->to;  // 可能的一个新的点
-        if (nodeSet.find(toNode) == nodeSet.end())
-        {
-          // 不含有的时候，就是新的点
-          nodeSet.emplace(toNode);
-          result.emplace(edge);
-          for (Edge *nextEdge : toNode->edges)
-          {
-            priorityQueue.emplace(nextEdge);
-          }
-        }
-      }
-    }
-    // break;
-  }
-  return result;
-}
-// 请保证graph是连通图
-// graph[i][j]表示点i到点j的距离，如果是系统最大值代表无路
-// 返回值是最小连通图的路径之和
-int prim(TdArray &graph, int n)
-{
-  int size = n;
-  vector<int> distances(size);
-  vector<bool> visit(size);
-  visit[0] = true;
-  for (int i = 0; i < size; i++)
-  {
-    distances[i] = graph[0][i];  // 表示节点i加入连通图最小生成树需要的最短距离
-  }
-  int sum = 0;
-  for (int i = 1; i < size; i++)
-  {
-    int minPath = INT32_MAX;
-    int minIndex = -1;
-    for (int j = 0; j < size; j++)
-    {
-      if (!visit[j] && distances[j] < minPath)  // 找到距离最小的点
-      {
-        minPath = distances[j];
-        minIndex = j;
-      }
-    }
-    if (minIndex == -1)  // 所有边遍历结束
-    {
-      return sum;
-    }
-    visit[minIndex] = true;  // 标记已访问
-    sum += minPath;          // 记录距离
-    for (int j = 0; j < size; j++)
-    {
-      // 因为点minIndex的加入，需要更新j加入连通图最小生成树的最短距离
-      if (!visit[j] && distances[j] > graph[minIndex][j])
-      {
-        distances[j] = graph[minIndex][j];
-      }
-    }
-  }
-  return sum;
-}
